@@ -4,28 +4,28 @@
       [reagent.dom :as d]))
 
 ;; -------------------------
+;; State
+
+(defonce charsheet (r/atom {}))
+
+;; -------------------------
 ;; Views
 
-
-(defn lister [items]
-  [:ul
-   (for [item items]
-     ^{:key item} [:li "Item " item])])
-
-(defn lister-user []
-  [:div
-   "Here is a list:"
-   [lister (range 3)]])
-
-(defn text-input
-  ([name] (text-input name name))
-  ([name label]
-   [:div
-    [:label {:for name} (clojure.string/capitalize label)]
-    [:input {:name name :id name}]]))
+(defn aligned-text-input [label]
+   [:div.pure-control-group
+    [:label {:for label} (clojure.string/capitalize label)]
+    [:input {:name label :id label
+             :on-blur
+             #(swap! charsheet assoc (keyword label) (.. % -target -value))}]])
 
 (defn home-page []
-  [text-input "name"])
+  [:div.pure-form.pure-form-aligned
+   [:fieldset
+    [aligned-text-input "name"]
+    [aligned-text-input "player"]
+    [aligned-text-input "chronicle"]
+    [aligned-text-input "concept"]
+    [aligned-text-input "ambition"]]])
 
 ;; -------------------------
 ;; Initialize app
