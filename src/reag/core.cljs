@@ -6,8 +6,26 @@
 ;; -------------------------
 ;; Views
 
+
+(defn lister [items]
+  [:ul
+   (for [item items]
+     ^{:key item} [:li "Item " item])])
+
+(defn lister-user []
+  [:div
+   "Here is a list:"
+   [lister (range 3)]])
+
+(defn text-input
+  ([name] (text-input name name))
+  ([name label]
+   [:div
+    [:label {:for name} (clojure.string/capitalize label)]
+    [:input {:name name :id name}]]))
+
 (defn home-page []
-  [:div [:h2 "Welcome to Reagent"]])
+  [text-input "name"])
 
 ;; -------------------------
 ;; Initialize app
