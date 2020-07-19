@@ -1,6 +1,6 @@
-(ns reag.prod
+(ns vtmcharsheet.prod
   (:require
-    [reag.core :as core]))
+    [vtmcharsheet.core :as core]))
 
 ;;ignore println statements in prod
 (set! *print-fn* (fn [& _]))

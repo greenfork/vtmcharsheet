@@ -1,6 +1,6 @@
-(ns ^:figwheel-no-load reag.dev
+(ns ^:figwheel-no-load vtmcharsheet.dev
   (:require
-    [reag.core :as core]
+    [vtmcharsheet.core :as core]
     [devtools.core :as devtools]))
 
 (extend-protocol IPrintWithWriter
