@@ -203,6 +203,7 @@
   [:div
    [:h2 "Attributes"]
    [:p "Take one attribute at 4; three attributes at 3; four attributes at 2; one attribute at 1."]
+   [:p "Hover over any element to get a hint."]
    [:div.pure-g
     (for [[k _] (:attributes @charsheet)]
       ^{:key k} [attribute-element k])]])
@@ -223,6 +224,7 @@
              :on-click #(reset! skill-distribution k)}
             (:name v)]))]]
       [:p (:description (@skill-distribution data/skill-distributions))]]
+     [:p "Hover over any element to get a hint."]
      [:div
       (for [[k _] (:skills @charsheet)]
         ^{:key k} [skill-element k])]]))
