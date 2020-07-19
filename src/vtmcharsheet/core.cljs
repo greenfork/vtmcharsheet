@@ -3,7 +3,9 @@
      [reagent.core :as r]
      [reagent.dom :as d]
      [clojure.string :as str]
-     [vtmcharsheet.data :as data]))
+     [vtmcharsheet.data :as data]
+     [cljsjs.react-tooltip-lite]))
+(def tooltip (aget js/ReactToolTipLite "default"))
 
 ;; -------------------------
 ;; State
@@ -106,12 +108,14 @@
 
 (defn clamp [value min-value max-value] (max (min value max-value) min-value))
 
-(defn circle-input [cursor min-value max-value]
+(defn standard-circle [value current-value-cursor]
+  [:span.circle {:class [(when (<= value @current-value-cursor) :active)]}])
+
+(defn circle-input [cursor min-value max-value circle-func]
   [:div.circle-input
    (doall
      (for [v (range 1 (inc max-value))]
-       ^{:key v} [:span.circle
-                  {:class [(when (<= v @cursor) :active)]}]))
+       ^{:key v} [circle-func v cursor]))
    [:span.pure-button-group.circle-control
     [:button.pure-button
      {:on-click #(swap! cursor (fn [v] (clamp (dec (int v)) min-value max-value)))}
@@ -120,11 +124,21 @@
      {:on-click #(swap! cursor (fn [v] (clamp (inc (int v)) min-value max-value)))}
      "+"]]])
 
+(defn attribute-circle [attr value current-value-cursor]
+  [:>
+   tooltip
+   {:content (get-in data/attributes [attr value])
+    :tag-name :span
+    :class-name (str/join " " ["circle" (when (<= value @current-value-cursor) "active")])
+    :tip-content-class-name ""
+    :use-default-styles true}])
+
 (defn attribute-element [k]
   [:<>
    [:div.pure-u-5-24 (humanize (name k))]
    [:div.pure-u-19-24
-    [circle-input (r/cursor charsheet [:attributes k]) 1 5]]])
+    [circle-input (r/cursor charsheet [:attributes k]) 1 5
+     (partial attribute-circle k)]]])
 
 (defn skill-element [k]
   [:<>
@@ -138,7 +152,7 @@
                #(swap! charsheet assoc-in [:skills k :specialty]
                        (.. % -target -value))}])]
    [:div.pure-u-9-24
-    [circle-input (r/cursor charsheet [:skills k :value]) 0 5]]])
+    [circle-input (r/cursor charsheet [:skills k :value]) 0 5 standard-circle]]])
 
 (defn intro-page []
   [:div.pure-form.pure-form-aligned
