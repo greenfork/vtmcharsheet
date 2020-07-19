@@ -1,15 +1,25 @@
 (ns reag.core
     (:require
-      [reagent.core :as r]
-      [reagent.dom :as d]
-      [clojure.string :as str]))
+     [reagent.core :as r]
+     [reagent.dom :as d]
+     [clojure.string :as str]))
 
 ;; -------------------------
 ;; State
 
 (defonce charsheet
-  (r/atom {:clan "brujah"}))
-
+  ;; Default values are set here.
+  (r/atom {:clan "brujah"
+           :attributes (array-map
+                        :strength 1
+                        :dexterity 1
+                        :stamina 1
+                        :charisma 1
+                        :manipulation 1
+                        :composure 1
+                        :intelligence 1
+                        :wits 1
+                        :resolve 1)}))
 (defonce page (r/atom 0))
 
 ;; -------------------------
@@ -189,7 +199,7 @@
              :placeholder placeholder
              :on-change
              #(swap! charsheet assoc (keyword label) (.. % -target -value))}]])
-(defn aligned-select [label coll access-sequence]
+(defn aligned-select-map [label coll access-sequence]
   [:div.pure-control-group
    [:label {:for label} (str/capitalize label)]
    [:select {:id label :value ((keyword label) @charsheet)
@@ -197,6 +207,20 @@
              #(swap! charsheet assoc (keyword label) (.. % -target -value))}
     (for [[k v] coll]
       ^{:key k} [:option {:value k} (get-in v access-sequence)])]])
+(defn aligned-select-array [label coll]
+  [:div.pure-control-group
+   [:label {:for label} (str/capitalize label)]
+   [:select {:id label
+             :on-change
+             #(swap! charsheet assoc (keyword label) (.. % -target -value))}
+    (for [v coll]
+      ^{:key v} [:option {:value v} v])]])
+
+(defn attribute-element [k]
+  ^{:key k}
+  [:<>
+   [:div.pure-u-5-24 (str/capitalize (name k))]
+   [:div.pure-u-19-24 "dot dot dot dot dot"]])
 
 (def pages
   (vector
@@ -212,26 +236,38 @@
    [:div.pure-form.pure-form-aligned
     [:fieldset
      [aligned-text-input "sire" "Name of your sire"]
-     [aligned-select "clan" clans [:name]]
+     [aligned-select-map "clan" clans [:name]]
+     [aligned-select-array "generation" (range 1 20)]
      [:div [clan-description]]]]
    ;; Third page
-   [:div "third page"]))
+   [:div
+    [:h2 "Attributes"]
+    [:div.pure-g
+     (for [[k _] (:attributes @charsheet)]
+       (attribute-element k))]]
+   ;; Fourth page
+   [:div
+    [:h2 "Attributes"]]))
 
-(defn has-next-page? [] (< @page (dec (count pages))))
-(defn has-prev-page? [] (> @page 0))
-(defn next-page [] (when (has-next-page?) (swap! page inc)))
-(defn prev-page [] (when (has-prev-page?) (swap! page dec)))
+(defn has-next-page? [page] (< @page (dec (count pages))))
+(defn has-prev-page? [page] (> @page 0))
+(defn next-page [page] (when (has-next-page? page) (swap! page inc)))
+(defn prev-page [page] (when (has-prev-page? page) (swap! page dec)))
 
 (defn page-id [id] (str "page" id))
 (defn home-page []
-  [:div
-   (nth pages @page [:div "Page not found"])
-   [:button.pure-button
-    {:on-click prev-page :disabled (not (has-prev-page?))}
-    "Previous"]
-   [:button.pure-button
-    {:on-click next-page :disabled (not (has-next-page?))}
-    "Next"]])
+  (r/with-let [current-page page]
+    (fn []
+      [:div
+       (nth pages @current-page [:div "Page not found"])
+       [:button.pure-button
+        {:on-click #(prev-page current-page)
+         :disabled (not (has-prev-page? current-page))}
+        "Previous"]
+       [:button.pure-button
+        {:on-click #(next-page current-page)
+         :disabled (not (has-next-page? current-page))}
+        "Next"]])))
 
 ;; -------------------------
 ;; Initialize app
