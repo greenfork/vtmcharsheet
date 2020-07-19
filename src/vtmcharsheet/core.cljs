@@ -129,7 +129,15 @@
 (defn skill-element [k]
   [:<>
    [:div.pure-u-5-24 (humanize (name k))]
-   [:div.pure-u-19-24
+   [:div.pure-u-10-24.pure-form
+    (let [specialty-k (str "specialty-" k)]
+      [:input {:style {:font-size "90%"}
+               :value (get-in @charsheet [:skills k :specialty])
+               :placeholder "Specialty"
+               :on-change
+               #(swap! charsheet assoc-in [:skills k :specialty]
+                       (.. % -target -value))}])]
+   [:div.pure-u-9-24
     [circle-input (r/cursor charsheet [:skills k :value]) 0 5]]])
 
 (defn intro-page []
