@@ -135,7 +135,13 @@
 
 (defn attribute-element [k]
   [:<>
-   [:div.pure-u-5-24 (humanize (name k))]
+   [:div.pure-u-5-24
+    [:>
+     tooltip
+     {:content (get-in data/attributes [k :description])
+      :tag-name :span
+      :use-default-styles true}
+     (humanize (name k))]]
    [:div.pure-u-19-24
     [circle-input (r/cursor charsheet [:attributes k]) 1 5
      (partial attribute-circle k)]]])

@@ -160,55 +160,64 @@
 
 (def attributes
   {:strength
-   {1 "You can easily crush a beer can (20kg: a Christmas tree, a stop sign)"
+   {:description "Strength governs how big a mortal you can lift, how hard you can hit them, and how much force you can push your dead body to exert."
+    1 "You can easily crush a beer can (20kg: a Christmas tree, a stop sign)"
     2 "You are physically average (45kg: a toilet)"
     3 "You might be able to break open a wooden door (115kg: a large human, a refrigerator)"
     4 "You are a prime physical specimen, likely with very visible musculature (180kg: a full coffin, an empty dumpster)"
     5 "You are a true powerhouse and can likely break open a metal fire door, tear open a chain-link fence, or snap open a chained gate (250kg: a motorcycle, a piano)"}
    :dexterity
-   {1 "You can run, but balance and dodging are a challenge"
+   {:description "Dexterity governs your agility and grace, how swiftly you dodge that stake to your heart, and how much fine motor control you possess when up against the clock."
+    1 "You can run, but balance and dodging are a challenge"
     2 "You sprint is solid, and sometimes you appear graceful"
     3 "Your agility is impressive, and your coordination is as good as any trained amateur"
     4 "You could excel at acrobatics and move in a way few humans can"
     5 "Your movements are liquid and hypnotic - almost super-human"}
    :stamina
-   {1 "Even lesser exertions make you winded"
+   {:description "Your physical resistance: Stamina absorbs physical harm, such as a speeding bullet or a hunter's blade, and lets you persevere through hazards and arduous effort."
+    1 "Even lesser exertions make you winded"
     2 "You can take a beating, but consider suing for peace"
     3 "Several days of hard hiking with a backpack is no problem for you"
     4 "You could win a marathon or take copious amounts of pain, at least physically"
     5 "Even if you were a mortal, you'd never break a sweat"}
    :charisma
-   {1 "You can speak clearly, though few people tend to listen"
+   {:description "Charisma measures your natural charm, grace, and sex appeal. If you have it, it draws people to you, making feeding a hell of a lot easier. Charisma doesn't depend on good looks, which are their own merit."
+    1 "You can speak clearly, though few people tend to listen"
     2 "Generally likeable despite your undead nature, you may even have friends"
     3 "People trust you implicitly, and you easily make friends"
     4 "You possess significant personal mgnetism and draw followers like flies"
     5 "You could lead a city in rebellion, if you so choose"}
    :manipulation
-   {1 "As long as you stay honest, you can convince people to do what you want"
+   {:description "Manipulation is your ability to twist others to your point of view, lie convincingly, and walk away after duping a mark without anyone being any the wiser."
+    1 "As long as you stay honest, you can convince people to do what you want"
     2 "Your ability to deceive surpasses the will of the weak-willed and simple-minded"
     3 "You never have to pay full price for anything"
     4 "You could be a cult leader - or a politician"
     5 "You could convince the Prince to invest in desert property, or maybe even to call of the Blood Hunt on your head"}
    :composure
-   {1 "The slightest insult or confrontation could drive you to frenzy"
+   {:description "Composure allows you to remain calm, to command your emotions, and to put others at ease despite anxiety. It is also represents your ability to stay cool in everything from firefights to intimate encounters."
+    1 "The slightest insult or confrontation could drive you to frenzy"
     2 "You can subdue your predatory instincts in most non-hostile situations"
     3 "Others look to you for guidance when the blood spatter hits the fan"
     4 "You can effortlessly bluff at cards and can manage your Beast to some extent"
     5 "The Beast is your pet"}
    :intelligence
-   {1 "You can read and write competently, though some terms confound you"
+   {:description "Intelligence measures your ability to reason, research, and apply logic. You can recall an analyze information from books or from your senses. No puzzle or mystery can elude the truly intelligent."
+    1 "You can read and write competently, though some terms confound you"
     2 "You are smart enough to realize your limitations"
     3 "You are enlightened, able to piece together clues without difficulty"
     4 "You're likely consulted by members of Clan Tremere for your wisdom"
     5 "Genius does not cover the depths and range of your intellect"}
    :wits
-   {1 "You get the point eventually, but it takes explaining"
+   {:description "Wits are for thinking quickly and reacting correctly on little information. \"You hear a sound\" is Wits; \"You hear two guards coming\" is Intelligence. Wits let you smell an ambush or answer the Harpy back at court right away, instead of thinking of the best response the next night."
+    1 "You get the point eventually, but it takes explaining"
     2 "You can bet the odds in poker or apply the emergency brakes in time, usually"
     3 "You can analyze a situation and quickly work out the best escape route"
     4 "You are never caught on the back foot and always come up with a smart riposte"
     5 "You think and respond more quickly than most people can comprehend"}
    :resolve
-   {1 "You have minimal attention for all but the most pressing things"
+   {:description "Resolve provides focus and determination, and measures concentration and mental fortitude. Resolve powers all-night watches and blocks out distractions."
+    1 "You have minimal attention for all but the most pressing things"
     2 "You can settle in for the long haul, as long as it's not too long"
     3 "Distracting you takes more effort than most other people want to spend"
     4 "You can brute-force your way to a deduction past any obstacles"
