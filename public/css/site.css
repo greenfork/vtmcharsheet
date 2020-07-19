@@ -54,3 +54,7 @@ a:hover {
 .circle-control {
   margin-left: .5rem;
 }
+
+.react-tooltip-lite {
+  max-width: 700px !important;
+}
