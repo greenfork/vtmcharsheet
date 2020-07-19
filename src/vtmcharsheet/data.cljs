@@ -149,8 +149,11 @@
 
 (def skill-distributions
   {:jack-of-all-trades
-   {:description "Take one skill at 3; eight skills at 2; ten skills at 1."}
+   {:name "Jack-of-all-trades"
+    :description "Take one skill at 3; eight skills at 2; ten skills at 1."}
    :balanced
-   {:description "Take three skills at 3; five skills at 2; seven skills at 1."}
+   {:name "Balanced"
+    :description "Take three skills at 3; five skills at 2; seven skills at 1."}
    :specialist
-   {:description "Take one skill at 4; three skills at 3; three skills at 2; three skills at 1."}})
+   {:name "Specialist"
+    :description "Take one skill at 4; three skills at 3; three skills at 2; three skills at 1."}})

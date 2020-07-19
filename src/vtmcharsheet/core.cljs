@@ -58,9 +58,12 @@
 ;; -------------------------
 ;; Views
 
+(defn humanize [x]
+  (str/capitalize (str/replace (name x) "-" " ")))
+
 (defn aligned-text-input [label placeholder]
    [:div.pure-control-group
-    [:label {:for label} (str/capitalize label)]
+    [:label {:for label} (humanize label)]
     [:input {:name label :id label :value ((keyword label) @charsheet)
              :placeholder placeholder
              :on-change
@@ -68,7 +71,7 @@
 
 (defn aligned-select-map [label coll access-sequence]
   [:div.pure-control-group
-   [:label {:for label} (str/capitalize label)]
+   [:label {:for label} (humanize label)]
    [:select {:id label :value ((keyword label) @charsheet)
              :on-change
              #(swap! charsheet assoc (keyword label) (.. % -target -value))}
@@ -77,7 +80,7 @@
 
 (defn aligned-select-array [label coll]
   [:div.pure-control-group
-   [:label {:for label} (str/capitalize label)]
+   [:label {:for label} (humanize label)]
    [:select {:id label
              :on-change
              #(swap! charsheet assoc (keyword label) (.. % -target -value))}
@@ -111,18 +114,23 @@
                   {:class [(when (<= v @cursor) :active)]}]))
    [:span.pure-button-group.circle-control
     [:button.pure-button
-     {:on-click #(swap! cursor (fn [v] (clamp (dec v) min-value max-value)))}
+     {:on-click #(swap! cursor (fn [v] (clamp (dec (int v)) min-value max-value)))}
      "-"]
     [:button.pure-button
-     {:on-click #(swap! cursor (fn [v] (clamp (inc v) min-value max-value)))}
+     {:on-click #(swap! cursor (fn [v] (clamp (inc (int v)) min-value max-value)))}
      "+"]]])
 
 (defn attribute-element [k]
-  ^{:key k}
   [:<>
-   [:div.pure-u-5-24 (str/capitalize (name k))]
+   [:div.pure-u-5-24 (humanize (name k))]
    [:div.pure-u-19-24
     [circle-input (r/cursor charsheet [:attributes k]) 1 5]]])
+
+(defn skill-element [k]
+  [:<>
+   [:div.pure-u-5-24 (humanize (name k))]
+   [:div.pure-u-19-24
+    [circle-input (r/cursor charsheet [:skills k :value]) 0 5]]])
 
 (defn intro-page []
   [:div.pure-form.pure-form-aligned
@@ -147,29 +155,27 @@
    [:p "Take one attribute at 4; three attributes at 3; four attributes at 2; one attribute at 1."]
    [:div.pure-g
     (for [[k _] (:attributes @charsheet)]
-      (attribute-element k))]])
+      ^{:key k} [attribute-element k])]])
 
 (defn skills-page []
   (r/with-let [skill-distribution (r/cursor charsheet [:skill-distribution])]
     [:div
      [:h2 "Skills"]
-     [:p
-      "Skill distribution: "
-      [:span.pure-button-group
-       [:button.pure-button
-        {:class [(when (= @skill-distribution :jack-of-all-trades) :pure-button-active)]
-         :on-click #(reset! skill-distribution :jack-of-all-trades)}
-        "Jack-of-all-trades"]
-       [:button.pure-button
-        {:class [(when (= @skill-distribution :balanced) :pure-button-active)]
-         :on-click #(reset! skill-distribution :balanced)}
-        "Balanced"]
-       [:button.pure-button
-        {:class [(when (= @skill-distribution :specialist) :pure-button-active)]
-         :on-click #(reset! skill-distribution :specialist)}
-        "Specialist"]]]
-     [:p (:description (@skill-distribution data/skill-distributions))]]))
-
+     [:div
+      [:p
+       "Skill distribution: "
+       [:span.pure-button-group
+        (doall
+         (for [[k v] data/skill-distributions]
+           ^{:key k}
+           [:button.pure-button
+            {:class [(when (= @skill-distribution k) :pure-button-active)]
+             :on-click #(reset! skill-distribution k)}
+            (:name v)]))]]
+      [:p (:description (@skill-distribution data/skill-distributions))]]
+     [:div
+      (for [[k _] (:skills @charsheet)]
+        ^{:key k} [skill-element k])]]))
 
 (def pages
   (vector
