@@ -216,11 +216,28 @@
     (for [v coll]
       ^{:key v} [:option {:value v} v])]])
 
+(defn clamp [value min-value max-value] (max (min value max-value) min-value))
+
+(defn circle-input [cursor min-value max-value]
+  [:div.circle-input
+   (doall
+     (for [v (range 1 (inc max-value))]
+       ^{:key v} [:span.circle
+                  {:class [(when (<= v @cursor) :active)]}]))
+   [:span.pure-button-group.circle-control
+    [:button.pure-button
+     {:on-click #(swap! cursor (fn [v] (clamp (dec v) min-value max-value)))}
+     "-"]
+    [:button.pure-button
+     {:on-click #(swap! cursor (fn [v] (clamp (inc v) min-value max-value)))}
+     "+"]]])
+
 (defn attribute-element [k]
   ^{:key k}
   [:<>
    [:div.pure-u-5-24 (str/capitalize (name k))]
-   [:div.pure-u-19-24 "dot dot dot dot dot"]])
+   [:div.pure-u-19-24
+    [circle-input (r/cursor charsheet [:attributes k]) 1 5]]])
 
 (def pages
   (vector
@@ -247,7 +264,7 @@
        (attribute-element k))]]
    ;; Fourth page
    [:div
-    [:h2 "Attributes"]]))
+    [:h2 "Skills"]]))
 
 (defn has-next-page? [page] (< @page (dec (count pages))))
 (defn has-prev-page? [page] (> @page 0))
@@ -260,14 +277,15 @@
     (fn []
       [:div
        (nth pages @current-page [:div "Page not found"])
-       [:button.pure-button
-        {:on-click #(prev-page current-page)
-         :disabled (not (has-prev-page? current-page))}
-        "Previous"]
-       [:button.pure-button
-        {:on-click #(next-page current-page)
-         :disabled (not (has-next-page? current-page))}
-        "Next"]])))
+       [:div.pure-button-group
+        [:button.pure-button
+         {:on-click #(prev-page current-page)
+          :disabled (not (has-prev-page? current-page))}
+         "Previous"]
+        [:button.pure-button
+         {:on-click #(next-page current-page)
+          :disabled (not (has-next-page? current-page))}
+         "Next"]]])))
 
 ;; -------------------------
 ;; Initialize app
