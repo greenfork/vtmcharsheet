@@ -146,19 +146,41 @@
     [circle-input (r/cursor charsheet [:attributes k]) 1 5
      (partial attribute-circle k)]]])
 
+(defn skill-circle [skill value current-value-cursor]
+  [:>
+   tooltip
+   {:content (get-in data/skills [skill value])
+    :tag-name :span
+    :class-name (str/join " " ["circle" (when (<= value @current-value-cursor) "active")])
+    :tip-content-class-name ""
+    :use-default-styles true}])
+
 (defn skill-element [k]
   [:<>
-   [:div.pure-u-5-24 (humanize (name k))]
+   [:div.pure-u-5-24
+    [:>
+     tooltip
+     {:content (get-in data/skills [k :description])
+      :tag-name :span
+      :use-default-styles true}
+     (humanize (name k))]]
    [:div.pure-u-10-24.pure-form
     (let [specialty-k (str "specialty-" k)]
-      [:input {:style {:font-size "90%"}
-               :value (get-in @charsheet [:skills k :specialty])
-               :placeholder "Specialty"
-               :on-change
-               #(swap! charsheet assoc-in [:skills k :specialty]
-                       (.. % -target -value))}])]
+      [:>
+       tooltip
+       {:content (str "Examples: "
+                      (str/join ", " (get-in data/skills [k :specialties])))
+        :tag-name :span
+        :use-default-styles true}
+       [:input {:style {:font-size "90%"}
+                :value (get-in @charsheet [:skills k :specialty])
+                :placeholder "Specialty"
+                :on-change
+                #(swap! charsheet assoc-in [:skills k :specialty]
+                        (.. % -target -value))}]])]
    [:div.pure-u-9-24
-    [circle-input (r/cursor charsheet [:skills k :value]) 0 5 standard-circle]]])
+    [circle-input (r/cursor charsheet [:skills k :value]) 0 5
+     (partial skill-circle k)]]])
 
 (defn intro-page []
   [:div.pure-form.pure-form-aligned
