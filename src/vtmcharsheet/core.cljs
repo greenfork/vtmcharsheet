@@ -146,16 +146,27 @@
     [circle-input (r/cursor charsheet [:attributes k]) 1 5
      (partial attribute-circle k)]]])
 
-(defn skill-circle [skill value current-value-cursor]
+(defn circle-element [tooltip-text is-active]
   [:>
    tooltip
-   {:content (get-in data/skills [skill value])
+   {:content tooltip-text
     :tag-name :span
-    :class-name (str/join " " ["circle" (when (<= value @current-value-cursor) "active")])
+    :class-name (str/join " " ["circle" (when is-active "active")])
     :tip-content-class-name ""
     :use-default-styles true}])
 
-(defn skill-element [k]
+(defn circle-input2 [current-value max-value skill on-click-dec on-click-inc]
+  [:div.circle-input
+   (doall
+     (for [v (range 1 (inc max-value))]
+       ^{:key v} [circle-element
+                  (get-in data/skills [skill v])
+                  (<= v current-value)]))
+   [:span.pure-button-group.circle-control
+    [:button.pure-button {:on-click on-click-dec} "-"]
+    [:button.pure-button {:on-click on-click-inc} "+"]]])
+
+(defn skill-element [k cursor]
   [:<>
    [:div.pure-u-5-24
     [:>
@@ -173,14 +184,17 @@
         :tag-name :span
         :use-default-styles true}
        [:input {:style {:font-size "90%"}
-                :value (get-in @charsheet [:skills k :specialty])
+                :value (:specialty @cursor)
                 :placeholder "Specialty"
                 :on-change
-                #(swap! charsheet assoc-in [:skills k :specialty]
-                        (.. % -target -value))}]])]
+                #(swap! cursor assoc :specialty (.. % -target -value))}]])]
    [:div.pure-u-9-24
-    [circle-input (r/cursor charsheet [:skills k :value]) 0 5
-     (partial skill-circle k)]]])
+    [circle-input2
+     (:value @cursor)
+     5
+     k
+     #(swap! cursor assoc :value (clamp (dec (int (:value @cursor))) 0 5))
+     #(swap! cursor assoc :value (clamp (inc (int (:value @cursor))) 0 5))]]])
 
 (defn intro-page []
   [:div.pure-form.pure-form-aligned
@@ -227,7 +241,7 @@
      [:p "Hover over any element to get a hint."]
      [:div
       (for [[k _] (:skills @charsheet)]
-        ^{:key k} [skill-element k])]]))
+        ^{:key k} [skill-element k (r/cursor charsheet [:skills k])])]]))
 
 (def pages
   (vector
@@ -244,18 +258,17 @@
 (defn page-id [id] (str "page" id))
 (defn home-page []
   (r/with-let [current-page page]
-    (fn []
-      [:div
-       (nth pages @current-page [:div "Page not found"])
-       [:div.pure-button-group
-        [:button.pure-button
-         {:on-click #(prev-page current-page)
-          :disabled (not (has-prev-page? current-page))}
-         "Previous"]
-        [:button.pure-button
-         {:on-click #(next-page current-page)
-          :disabled (not (has-next-page? current-page))}
-         "Next"]]])))
+    [:div
+     (nth pages @current-page [:div "Page not found"])
+     [:div.pure-button-group
+      [:button.pure-button
+       {:on-click #(prev-page current-page)
+        :disabled (not (has-prev-page? current-page))}
+       "Previous"]
+      [:button.pure-button
+       {:on-click #(next-page current-page)
+        :disabled (not (has-next-page? current-page))}
+       "Next"]]]))
 
 ;; -------------------------
 ;; Initialize app
