@@ -45,9 +45,17 @@
   ([] (reset-attributes
        (zipmap data/attributes-ordered data/attributes-defaults)))
   ([values] (swap! charsheet assoc :attributes values)))
+(defn random-attributes []
+  (reset-attributes
+   (zipmap data/attributes-ordered (shuffle data/attributes-random))))
 (defn reset-skills
   ([] (reset-skills (zipmap data/skills-ordered data/skills-defaults)))
   ([values] (swap! charsheet assoc :skills values)))
+(defn random-skills []
+  (reset-skills
+   (zipmap (shuffle data/skills-ordered)
+           (map (fn [x] {:value x})
+            (shuffle ((:skill-distribution @charsheet) data/skills-random))))))
 
 ;; -------------------------
 ;; Components

@@ -22,12 +22,17 @@
    [:strength :dexterity :stamina :charisma :manipulation :composure
     :intelligence :wits :resolve])
 (def attributes-defaults (repeat 9 1))
+(def attributes-random [4 3 3 3 2 2 2 2 1])
 (def skills-ordered
    [:athletics :brawl :craft :drive :firearms :melee :larceny :stealth :survival
     :animal-ken :etiquette :insight :intimidation :leadership :performance
     :persuasion :streetwise :subterfuge :academics :awareness :finance
     :investigation :medicine :occult :politics :science :technology])
 (def skills-defaults (repeat 27 {}))
+(def skills-random
+  {:jack-of-all-trades (vec (concat '(3) (repeat 8 2) (repeat 10 1)))
+   :balanced (vec (concat (repeat 3 3) (repeat 5 2) (repeat 7 1)))
+   :specialist (vec (concat '(4) (repeat 3 3) (repeat 3 2) (repeat 3 1)))})
 
 (def clans
   (array-map
