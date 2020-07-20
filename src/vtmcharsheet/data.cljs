@@ -230,7 +230,7 @@
     2 "Despite being dead, you are still as fit as a mortal doing regular exercise"
     3 "You are fit as a fiddle and could play professional sports"
     4 "With your parkour abilities, why would you need to turn into a bat?"
-    5 "Olympie records await you; only a very few peak humans can achive what you can"
+    5 "Olympic records await you; only a very few peak humans can achive what you can"
     :specialties ["Acrobatics" "Archery" "Climbing" "Endurance" "Jumping" "Parkour"
                   "Swimming" "Throwing"]}
    :brawl

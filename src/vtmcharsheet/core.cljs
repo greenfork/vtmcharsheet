@@ -101,13 +101,18 @@
 (defn circle-input
   "A set of circles defining an integer value and buttons to
   increase or decrease it."
-  [current-value max-value desc on-click-dec on-click-inc]
+  [cursor min-value max-value tooltips]
   [:div.circle-input
-   (for [v (range 1 (inc max-value))]
-     ^{:key v} [circle-with-tooltip (desc v) (<= v current-value)])
+   (doall
+     (for [v (range 1 (inc max-value))]
+       ^{:key v} [circle-with-tooltip (tooltips v) (<= v @cursor)]))
    [:span.pure-button-group.circle-control
-    [:button.pure-button {:on-click on-click-dec} "-"]
-    [:button.pure-button {:on-click on-click-inc} "+"]]])
+    [:button.pure-button
+     {:on-click
+      #(swap! cursor (fn [x] (clamp (dec (int x)) min-value max-value)))} "-"]
+    [:button.pure-button
+     {:on-click
+      #(swap! cursor (fn [x] (clamp (inc (int x)) min-value max-value)))} "+"]]])
 
 (defn attribute-element
   "A single line for the attribute."
@@ -120,13 +125,7 @@
       :tag-name :span
       :use-default-styles true}
      (humanize (name k))]]
-   [:div.pure-u-19-24
-    [circle-input
-     @cursor
-     5
-     (k data/attributes)
-     #(swap! cursor (fn [x] (clamp (dec (int x)) 1 5)))
-     #(swap! cursor (fn [x] (clamp (inc (int x)) 1 5)))]]])
+   [:div.pure-u-19-24 [circle-input cursor 1 5 (k data/attributes)]]])
 
 (defn skill-element
   "A single line for the skill."
@@ -153,12 +152,7 @@
                 :on-change
                 #(swap! cursor assoc :specialty (.. % -target -value))}]])]
    [:div.pure-u-9-24
-    [circle-input
-     (:value @cursor)
-     5
-     (k data/skills)
-     #(swap! cursor assoc :value (clamp (dec (int (:value @cursor))) 0 5))
-     #(swap! cursor assoc :value (clamp (inc (int (:value @cursor))) 0 5))]]])
+    [circle-input (r/cursor cursor [:value]) 0 5 (k data/skills)]]])
 
 ;; -------------------------
 ;; Views
