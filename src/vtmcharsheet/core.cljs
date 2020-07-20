@@ -77,13 +77,6 @@
   ([x word plural-word]
    (if (== 1 (mod x 10)) word plural-word)))
 
-(def numbers {0 "zero"
-              1 "one"
-              2 "two"
-              3 "three"
-              4 "four"
-              5 "five"})
-
 ;; -------------------------
 ;; Components
 
@@ -155,7 +148,7 @@
         number-of-elems (count-elems #{value} attrs)]
     (when (or (not (zero? valid)) (pos? number-of-elems))
       [:<>
-       [:span "Take " (numbers valid) " "
+       [:span "Take " (data/numbers valid) " "
         (pluralize valid unit-name) " at " value ": "
         [:span
          {:class [(if (== valid number-of-elems) "correct-color" "wrong-color")]}
@@ -242,7 +235,7 @@
    [:h2 "Attributes"]
    [:p (distribution-text
         (vals (:attributes @charsheet))
-        {5 0, 4 1, 3 3, 2 4, 1 1}
+        data/attribute-validations
         "attribute")]
    [:p "Hover over any element to get a hint."]
    [:div.pure-g
@@ -264,7 +257,10 @@
             {:class [(when (= @skill-distribution k) :pure-button-active)]
              :on-click #(reset! skill-distribution k)}
             (:name v)]))]]
-      [:p (:description (@skill-distribution data/skill-distributions))]]
+      [:p (distribution-text
+           (map (fn [[_ v]] (int (:value v))) (:skills @charsheet))
+           ((:skill-distribution @charsheet) data/skill-validations)
+           "skill")]]
      [:p "Hover over any element to get a hint."]
      [:div
       (for [[k _] (:skills @charsheet)]
