@@ -65,6 +65,25 @@
 
 (defn clamp [value min-value max-value] (max (min value max-value) min-value))
 
+(defn count-elems [pred coll]
+  (reduce (fn [acc x] (if (pred x) (inc acc) acc)) 0 coll))
+
+(defn pluralize
+  "Poor man's pluralization function."
+  ([x word]
+   (if (#{\a \o \u \i} (last word))
+     (pluralize x word (str word "es"))
+     (pluralize x word (str word "s"))))
+  ([x word plural-word]
+   (if (== 1 (mod x 10)) word plural-word)))
+
+(def numbers {0 "zero"
+              1 "one"
+              2 "two"
+              3 "three"
+              4 "four"
+              5 "five"})
+
 ;; -------------------------
 ;; Components
 
@@ -126,6 +145,26 @@
       :use-default-styles true}
      (humanize (name k))]]
    [:div.pure-u-19-24 [circle-input cursor 1 5 (k data/attributes)]]])
+
+(defn unit-wrapper [current correct]
+  (let [wrap-parens (fn [a b] (str "(" a "/" b ")"))]
+    [:span
+     {:class [(if (== current correct) "correct-color" "wrong-color")]}
+     (wrap-parens current correct)]))
+
+(defn attribute-distribution-text [attrs validations]
+  (let [line
+        (fn [x]
+          (let [valid (validations x)]
+            [:span "Take " (numbers valid) " "
+             (pluralize valid "attribute") " at " x ": "
+             [unit-wrapper (count-elems #{x} attrs) valid]]))]
+    [:span
+     [line 5] [:br]
+     [line 4] [:br]
+     [line 3] [:br]
+     [line 2] [:br]
+     [line 1] [:br]]))
 
 (defn skill-element
   "A single line for the skill."
@@ -198,7 +237,9 @@
 (defn attributes-page []
   [:div
    [:h2 "Attributes"]
-   [:p "Take one attribute at 4; three attributes at 3; four attributes at 2; one attribute at 1."]
+   [:p (attribute-distribution-text
+        (vals (:attributes @charsheet))
+        {5 0, 4 1, 3 3, 2 4, 1 1})]
    [:p "Hover over any element to get a hint."]
    [:div.pure-g
     (for [[k _] (:attributes @charsheet)]
