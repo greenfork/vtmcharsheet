@@ -63,31 +63,20 @@
 (defn humanize [x]
   (str/capitalize (str/replace (name x) "-" " ")))
 
-(defn aligned-text-input [label placeholder]
+(defn text-input [cursor label placeholder]
    [:div.pure-control-group
     [:label {:for label} (humanize label)]
-    [:input {:name label :id label :value ((keyword label) @charsheet)
+    [:input {:name label :id label :value @cursor
              :placeholder placeholder
-             :on-change
-             #(swap! charsheet assoc (keyword label) (.. % -target -value))}]])
+             :on-change #(reset! cursor (.. % -target -value))}]])
 
-(defn aligned-select-map [label coll access-sequence]
+(defn select-input [cursor label options]
   [:div.pure-control-group
    [:label {:for label} (humanize label)]
-   [:select {:id label :value ((keyword label) @charsheet)
-             :on-change
-             #(swap! charsheet assoc (keyword label) (.. % -target -value))}
-    (for [[k v] coll]
-      ^{:key k} [:option {:value k} (get-in v access-sequence)])]])
-
-(defn aligned-select-array [label coll]
-  [:div.pure-control-group
-   [:label {:for label} (humanize label)]
-   [:select {:id label
-             :on-change
-             #(swap! charsheet assoc (keyword label) (.. % -target -value))}
-    (for [v coll]
-      ^{:key v} [:option {:value v} v])]])
+   [:select {:id label :value @cursor
+             :on-change #(reset! cursor (.. % -target -value))}
+    (for [[k v] options]
+      ^{:key k} [:option {:value k} v])]])
 
 (defn clan-description []
   (let [clan-info ((keyword (:clan @charsheet)) data/clans)]
@@ -175,18 +164,23 @@
 (defn intro-page []
   [:div.pure-form.pure-form-aligned
    [:fieldset
-    [aligned-text-input "name" "Character's name"]
-    [aligned-text-input "player" "Your real name"]
-    [aligned-text-input "chronicle" "The title of a chronicle"]
-    [aligned-text-input "concept" "What is your character about?"]
-    [aligned-text-input "ambition" "What do you want the most?"]]])
+    [text-input (r/cursor charsheet [:name]) "name" "Character's name"]
+    [text-input (r/cursor charsheet [:player]) "player" "Your real name"]
+    [text-input (r/cursor charsheet [:chronicle]) "chronicle"
+     "The title of a chronicle"]
+    [text-input (r/cursor charsheet [:concept]) "concept"
+     "What is your character?"]
+    [text-input (r/cursor charsheet [:ambition]) "ambition"
+     "What do you want?"]]])
 
 (defn clan-page []
   [:div.pure-form.pure-form-aligned
    [:fieldset
-    [aligned-text-input "sire" "Name of your sire"]
-    [aligned-select-map "clan" data/clans [:name]]
-    [aligned-select-array "generation" (range 1 20)]
+    [text-input (r/cursor charsheet [:sire]) "sire" "Name of your sire"]
+    [select-input (r/cursor charsheet [:clan]) "clan"
+     (map (fn [[k v]] [k (:name v)]) data/clans)]
+    [select-input (r/cursor charsheet [:generation]) "generation"
+     (map (fn [x] [x x]) (range 1 20))]
     [:div [clan-description]]]])
 
 (defn attributes-page []
