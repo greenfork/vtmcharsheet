@@ -13,6 +13,7 @@
 (defonce charsheet
   ;; Default values are set here.
   (r/atom {:clan "brujah"
+           :generation 13
            :attributes (array-map
                         :strength 1
                         :dexterity 1
@@ -191,7 +192,7 @@
     [select-input (r/cursor charsheet [:clan]) "clan"
      (map (fn [[k v]] [k (:name v)]) data/clans)]
     [select-input (r/cursor charsheet [:generation]) "generation"
-     (map (fn [x] [x x]) (range 1 20))]
+     (map (fn [x] [x x]) (range 10 17))]
     [:div [clan-description ((keyword (:clan @charsheet)) data/clans)]]]])
 
 (defn attributes-page []
