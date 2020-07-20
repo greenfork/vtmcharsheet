@@ -108,32 +108,24 @@
 
 (defn clamp [value min-value max-value] (max (min value max-value) min-value))
 
-(defn standard-circle [value current-value-cursor]
-  [:span.circle {:class [(when (<= value @current-value-cursor) :active)]}])
-
-(defn circle-input [cursor min-value max-value circle-func]
-  [:div.circle-input
-   (doall
-     (for [v (range 1 (inc max-value))]
-       ^{:key v} [circle-func v cursor]))
-   [:span.pure-button-group.circle-control
-    [:button.pure-button
-     {:on-click #(swap! cursor (fn [v] (clamp (dec (int v)) min-value max-value)))}
-     "-"]
-    [:button.pure-button
-     {:on-click #(swap! cursor (fn [v] (clamp (inc (int v)) min-value max-value)))}
-     "+"]]])
-
-(defn attribute-circle [attr value current-value-cursor]
+(defn circle-with-tooltip [tooltip-text is-active]
   [:>
    tooltip
-   {:content (get-in data/attributes [attr value])
+   {:content tooltip-text
     :tag-name :span
-    :class-name (str/join " " ["circle" (when (<= value @current-value-cursor) "active")])
+    :class-name (str/join " " ["circle" (when is-active "active")])
     :tip-content-class-name ""
     :use-default-styles true}])
 
-(defn attribute-element [k]
+(defn circle-input2 [current-value max-value desc on-click-dec on-click-inc]
+  [:div.circle-input
+   (for [v (range 1 (inc max-value))]
+     ^{:key v} [circle-with-tooltip (desc v) (<= v current-value)])
+   [:span.pure-button-group.circle-control
+    [:button.pure-button {:on-click on-click-dec} "-"]
+    [:button.pure-button {:on-click on-click-inc} "+"]]])
+
+(defn attribute-element [k cursor]
   [:<>
    [:div.pure-u-5-24
     [:>
@@ -143,28 +135,12 @@
       :use-default-styles true}
      (humanize (name k))]]
    [:div.pure-u-19-24
-    [circle-input (r/cursor charsheet [:attributes k]) 1 5
-     (partial attribute-circle k)]]])
-
-(defn circle-element [tooltip-text is-active]
-  [:>
-   tooltip
-   {:content tooltip-text
-    :tag-name :span
-    :class-name (str/join " " ["circle" (when is-active "active")])
-    :tip-content-class-name ""
-    :use-default-styles true}])
-
-(defn circle-input2 [current-value max-value skill on-click-dec on-click-inc]
-  [:div.circle-input
-   (doall
-     (for [v (range 1 (inc max-value))]
-       ^{:key v} [circle-element
-                  (get-in data/skills [skill v])
-                  (<= v current-value)]))
-   [:span.pure-button-group.circle-control
-    [:button.pure-button {:on-click on-click-dec} "-"]
-    [:button.pure-button {:on-click on-click-inc} "+"]]])
+    [circle-input2
+     @cursor
+     5
+     (k data/attributes)
+     #(swap! cursor (fn [x] (clamp (dec (int x)) 1 5)))
+     #(swap! cursor (fn [x] (clamp (inc (int x)) 1 5)))]]])
 
 (defn skill-element [k cursor]
   [:<>
@@ -192,7 +168,7 @@
     [circle-input2
      (:value @cursor)
      5
-     k
+     (k data/skills)
      #(swap! cursor assoc :value (clamp (dec (int (:value @cursor))) 0 5))
      #(swap! cursor assoc :value (clamp (inc (int (:value @cursor))) 0 5))]]])
 
@@ -220,7 +196,7 @@
    [:p "Hover over any element to get a hint."]
    [:div.pure-g
     (for [[k _] (:attributes @charsheet)]
-      ^{:key k} [attribute-element k])]])
+      ^{:key k} [attribute-element k (r/cursor charsheet [:attributes k])])]])
 
 (defn skills-page []
   (r/with-let [skill-distribution (r/cursor charsheet [:skill-distribution])]
