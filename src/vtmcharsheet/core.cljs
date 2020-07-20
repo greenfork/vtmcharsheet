@@ -139,7 +139,6 @@
      (humanize (name k))]]
    [:div.pure-u-19-24 [circle-input cursor 1 5 (k data/attributes)]]])
 
-
 (defn distribution-line
   "Produces line like the following:
   Take three `unit-name` at 3: (2/3)"
