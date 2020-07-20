@@ -236,25 +236,24 @@
 (defn prev-page [page] (when (has-prev-page? page) (swap! page dec)))
 
 (defn page-id [id] (str "page" id))
-(defn home-page []
-  (r/with-let [current-page page]
-    [:div
-     (nth pages @current-page [:div "Page not found"])
-     [:div.pure-button-group
-      [:button.pure-button
-       {:on-click #(prev-page current-page)
-        :disabled (not (has-prev-page? current-page))}
-       "Previous"]
-      [:button.pure-button
-       {:on-click #(next-page current-page)
-        :disabled (not (has-next-page? current-page))}
-       "Next"]]]))
+(defn home-page [current-page]
+  [:div
+   (nth pages @current-page [:div "Page not found"])
+   [:div.pure-button-group
+    [:button.pure-button
+     {:on-click #(prev-page current-page)
+      :disabled (not (has-prev-page? current-page))}
+     "Previous"]
+    [:button.pure-button
+     {:on-click #(next-page current-page)
+      :disabled (not (has-next-page? current-page))}
+     "Next"]]])
 
 ;; -------------------------
 ;; Initialize app
 
 (defn mount-root []
-  (d/render [home-page] (.getElementById js/document "app")))
+  (d/render [home-page page] (.getElementById js/document "app")))
 
 (defn init! []
   (mount-root))
