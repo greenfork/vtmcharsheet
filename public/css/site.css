@@ -65,3 +65,8 @@ a:hover {
 .wrong-color {
   color: red;
 }
+
+.text-secondary {
+  font-size: 90%;
+  color: gray;
+}

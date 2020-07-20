@@ -146,25 +146,28 @@
      (humanize (name k))]]
    [:div.pure-u-19-24 [circle-input cursor 1 5 (k data/attributes)]]])
 
-(defn unit-wrapper [current correct]
-  (let [wrap-parens (fn [a b] (str "(" a "/" b ")"))]
-    [:span
-     {:class [(if (== current correct) "correct-color" "wrong-color")]}
-     (wrap-parens current correct)]))
 
-(defn attribute-distribution-text [attrs validations]
-  (let [line
-        (fn [x]
-          (let [valid (validations x)]
-            [:span "Take " (numbers valid) " "
-             (pluralize valid "attribute") " at " x ": "
-             [unit-wrapper (count-elems #{x} attrs) valid]]))]
-    [:span
-     [line 5] [:br]
-     [line 4] [:br]
-     [line 3] [:br]
-     [line 2] [:br]
-     [line 1] [:br]]))
+(defn distribution-line
+  "Produces line like the following:
+  Take three `unit-name` at 3: (2/3)"
+  [value attrs validations unit-name]
+  (let [valid (validations value)
+        number-of-elems (count-elems #{value} attrs)]
+    (when (or (not (zero? valid)) (pos? number-of-elems))
+      [:<>
+       [:span "Take " (numbers valid) " "
+        (pluralize valid unit-name) " at " value ": "
+        [:span
+         {:class [(if (== valid number-of-elems) "correct-color" "wrong-color")]}
+         "(" number-of-elems "/" valid ")"]
+        (when (> number-of-elems valid) [:span.text-secondary " too much"])
+        (when (< number-of-elems valid) [:span.text-secondary " not enough"])]
+       [:br]])))
+
+(defn distribution-text
+  [attrs validations unit-name]
+  (for [x (reverse (range 1 6))]
+    [distribution-line x attrs validations unit-name]))
 
 (defn skill-element
   "A single line for the skill."
@@ -237,9 +240,10 @@
 (defn attributes-page []
   [:div
    [:h2 "Attributes"]
-   [:p (attribute-distribution-text
+   [:p (distribution-text
         (vals (:attributes @charsheet))
-        {5 0, 4 1, 3 3, 2 4, 1 1})]
+        {5 0, 4 1, 3 3, 2 4, 1 1}
+        "attribute")]
    [:p "Hover over any element to get a hint."]
    [:div.pure-g
     (for [[k _] (:attributes @charsheet)]
