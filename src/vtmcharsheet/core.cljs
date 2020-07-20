@@ -60,8 +60,7 @@
 ;; -------------------------
 ;; Utilities
 
-(defn humanize [x]
-  (str/capitalize (str/replace (name x) "-" " ")))
+(defn humanize [x] (str/capitalize (str/replace (name x) "-" " ")))
 
 (defn clamp [value min-value max-value] (max (min value max-value) min-value))
 
@@ -226,11 +225,10 @@
         ^{:key k} [skill-element k (r/cursor charsheet [:skills k])])]]))
 
 (def pages
-  (vector
-   [intro-page]
-   [clan-page]
-   [attributes-page]
-   [skills-page]))
+   [[intro-page]
+    [clan-page]
+    [attributes-page]
+    [skills-page]])
 
 (defn has-next-page? [page] (< @page (dec (count pages))))
 (defn has-prev-page? [page] (> @page 0))
