@@ -14,48 +14,9 @@
   ;; Default values are set here.
   (r/atom {:clan "brujah"
            :generation 13
-           :attributes (array-map
-                        :strength 1
-                        :dexterity 1
-                        :stamina 1
-                        :charisma 1
-                        :manipulation 1
-                        :composure 1
-                        :intelligence 1
-                        :wits 1
-                        :resolve 1)
+           :attributes (zipmap data/attributes-ordered data/attributes-defaults)
            :skill-distribution :jack-of-all-trades
-           :skills (array-map
-                    ;; 1
-                    :athletics {}
-                    :brawl {}
-                    :craft {}
-                    :drive {}
-                    :firearms {}
-                    :melee {}
-                    :larceny {}
-                    :stealth {}
-                    :survival {}
-                    ;; 2
-                    :animal-ken {}
-                    :etiquette {}
-                    :insight {}
-                    :intimidation {}
-                    :leadership {}
-                    :performance {}
-                    :persuasion {}
-                    :streetwise {}
-                    :subterfuge {}
-                    ;; 3
-                    :academics {}
-                    :awareness {}
-                    :finance {}
-                    :investigation {}
-                    :medicine {}
-                    :occult {}
-                    :politics {}
-                    :science {}
-                    :technology {})}))
+           :skills (zipmap data/skills-ordered data/skills-defaults)}))
 (defonce page (r/atom 0))
 
 ;; -------------------------
@@ -76,6 +37,17 @@
      (pluralize x word (str word "s"))))
   ([x word plural-word]
    (if (== 1 (mod x 10)) word plural-word)))
+
+;; -------------------------
+;; Business-logic
+
+(defn reset-attributes
+  ([] (reset-attributes
+       (zipmap data/attributes-ordered data/attributes-defaults)))
+  ([values] (swap! charsheet assoc :attributes values)))
+(defn reset-skills
+  ([] (reset-skills (zipmap data/skills-ordered data/skills-defaults)))
+  ([values] (swap! charsheet assoc :skills values)))
 
 ;; -------------------------
 ;; Components
@@ -159,7 +131,7 @@
 (defn distribution-text
   [attrs validations unit-name]
   (for [x (reverse (range 1 6))]
-    [distribution-line x attrs validations unit-name]))
+    ^{:key x} [distribution-line x attrs validations unit-name]))
 
 (defn skill-element
   "A single line for the skill."
@@ -238,7 +210,7 @@
         "attribute")]
    [:p "Hover over any element to get a hint."]
    [:div.pure-g
-    (for [[k _] (:attributes @charsheet)]
+    (for [k data/attributes-ordered]
       ^{:key k} [attribute-element k (r/cursor charsheet [:attributes k])])]])
 
 (defn skills-page []
@@ -262,7 +234,7 @@
            "skill")]]
      [:p "Hover over any element to get a hint."]
      [:div
-      (for [[k _] (:skills @charsheet)]
+      (for [k data/skills-ordered]
         ^{:key k} [skill-element k (r/cursor charsheet [:skills k])])]]))
 
 (def pages

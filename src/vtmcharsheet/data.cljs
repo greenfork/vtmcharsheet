@@ -18,6 +18,17 @@
               9 "nine"
               10 "ten"})
 
+(def attributes-ordered
+   [:strength :dexterity :stamina :charisma :manipulation :composure
+    :intelligence :wits :resolve])
+(def attributes-defaults (repeat 9 1))
+(def skills-ordered
+   [:athletics :brawl :craft :drive :firearms :melee :larceny :stealth :survival
+    :animal-ken :etiquette :insight :intimidation :leadership :performance
+    :persuasion :streetwise :subterfuge :academics :awareness :finance
+    :investigation :medicine :occult :politics :science :technology])
+(def skills-defaults (repeat 27 {}))
+
 (def clans
   (array-map
    :brujah
