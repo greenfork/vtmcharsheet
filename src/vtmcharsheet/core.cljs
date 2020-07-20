@@ -58,19 +58,28 @@
 (defonce page (r/atom 0))
 
 ;; -------------------------
-;; Views
+;; Utilities
 
 (defn humanize [x]
   (str/capitalize (str/replace (name x) "-" " ")))
 
-(defn text-input [cursor label placeholder]
-   [:div.pure-control-group
-    [:label {:for label} (humanize label)]
-    [:input {:name label :id label :value @cursor
-             :placeholder placeholder
-             :on-change #(reset! cursor (.. % -target -value))}]])
+(defn clamp [value min-value max-value] (max (min value max-value) min-value))
 
-(defn select-input [cursor label options]
+;; -------------------------
+;; Components
+
+(defn text-input
+  "An input with a label and a placeholder."
+  [cursor label placeholder]
+  [:div.pure-control-group
+   [:label {:for label} (humanize label)]
+   [:input {:name label :id label :value @cursor
+            :placeholder placeholder
+            :on-change #(reset! cursor (.. % -target -value))}]])
+
+(defn select-input
+  "A select input with a label."
+  [cursor label options]
   [:div.pure-control-group
    [:label {:for label} (humanize label)]
    [:select {:id label :value @cursor
@@ -78,26 +87,9 @@
     (for [[k v] options]
       ^{:key k} [:option {:value k} v])]])
 
-(defn clan-description []
-  (let [clan-info ((keyword (:clan @charsheet)) data/clans)]
-    [:div
-     [:h2 (:name clan-info)]
-     [:div (:description clan-info)]
-     [:h3 "Archetypes"]
-     [:div
-      (for [archetype (:archetypes clan-info)]
-        ^{:key (:name archetype)}
-        [:div
-         [:strong (:name archetype)]
-         [:div (:description archetype)]])]
-     [:h3 "Disciplines"]
-     [:div (str/join ", " (:disciplines clan-info))]
-     [:h3 "Clan bane"]
-     [:div (:bane clan-info)]]))
-
-(defn clamp [value min-value max-value] (max (min value max-value) min-value))
-
-(defn circle-with-tooltip [tooltip-text is-active]
+(defn circle-with-tooltip
+  "A single circle with a tooltip."
+  [tooltip-text is-active]
   [:>
    tooltip
    {:content tooltip-text
@@ -106,7 +98,10 @@
     :tip-content-class-name ""
     :use-default-styles true}])
 
-(defn circle-input2 [current-value max-value desc on-click-dec on-click-inc]
+(defn circle-input
+  "A set of circles defining an integer value and buttons to
+  increase or decrease it."
+  [current-value max-value desc on-click-dec on-click-inc]
   [:div.circle-input
    (for [v (range 1 (inc max-value))]
      ^{:key v} [circle-with-tooltip (desc v) (<= v current-value)])
@@ -114,7 +109,9 @@
     [:button.pure-button {:on-click on-click-dec} "-"]
     [:button.pure-button {:on-click on-click-inc} "+"]]])
 
-(defn attribute-element [k cursor]
+(defn attribute-element
+  "A single line for the attribute."
+  [k cursor]
   [:<>
    [:div.pure-u-5-24
     [:>
@@ -124,14 +121,16 @@
       :use-default-styles true}
      (humanize (name k))]]
    [:div.pure-u-19-24
-    [circle-input2
+    [circle-input
      @cursor
      5
      (k data/attributes)
      #(swap! cursor (fn [x] (clamp (dec (int x)) 1 5)))
      #(swap! cursor (fn [x] (clamp (inc (int x)) 1 5)))]]])
 
-(defn skill-element [k cursor]
+(defn skill-element
+  "A single line for the skill."
+  [k cursor]
   [:<>
    [:div.pure-u-5-24
     [:>
@@ -154,12 +153,15 @@
                 :on-change
                 #(swap! cursor assoc :specialty (.. % -target -value))}]])]
    [:div.pure-u-9-24
-    [circle-input2
+    [circle-input
      (:value @cursor)
      5
      (k data/skills)
      #(swap! cursor assoc :value (clamp (dec (int (:value @cursor))) 0 5))
      #(swap! cursor assoc :value (clamp (inc (int (:value @cursor))) 0 5))]]])
+
+;; -------------------------
+;; Views
 
 (defn intro-page []
   [:div.pure-form.pure-form-aligned
@@ -173,6 +175,22 @@
     [text-input (r/cursor charsheet [:ambition]) "ambition"
      "What do you want?"]]])
 
+(defn clan-description [clan-info]
+  [:div
+   [:h2 (:name clan-info)]
+   [:div (:description clan-info)]
+   [:h3 "Archetypes"]
+   [:div
+    (for [archetype (:archetypes clan-info)]
+      ^{:key (:name archetype)}
+      [:div
+       [:strong (:name archetype)]
+       [:div (:description archetype)]])]
+   [:h3 "Disciplines"]
+   [:div (str/join ", " (:disciplines clan-info))]
+   [:h3 "Clan bane"]
+   [:div (:bane clan-info)]])
+
 (defn clan-page []
   [:div.pure-form.pure-form-aligned
    [:fieldset
@@ -181,7 +199,7 @@
      (map (fn [[k v]] [k (:name v)]) data/clans)]
     [select-input (r/cursor charsheet [:generation]) "generation"
      (map (fn [x] [x x]) (range 1 20))]
-    [:div [clan-description]]]])
+    [:div [clan-description ((keyword (:clan @charsheet)) data/clans)]]]])
 
 (defn attributes-page []
   [:div
