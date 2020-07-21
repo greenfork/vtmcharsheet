@@ -216,6 +216,9 @@
         (vals (:attributes @charsheet))
         data/attribute-validations
         "attribute")]
+   [:p.pure-button-group
+    [:button.pure-button {:on-click #(reset-attributes)} "Reset"]
+    [:button.pure-button {:on-click #(random-attributes)} "Random"]]
    [:p "Hover over any element to get a hint."]
    [:div.pure-g
     (for [k data/attributes-ordered]
@@ -240,6 +243,9 @@
            (map (fn [[_ v]] (int (:value v))) (:skills @charsheet))
            ((:skill-distribution @charsheet) data/skill-validations)
            "skill")]]
+     [:p.pure-button-group
+      [:button.pure-button {:on-click #(reset-skills)} "Reset"]
+      [:button.pure-button {:on-click #(random-skills)} "Random"]]
      [:p "Hover over any element to get a hint."]
      [:div
       (for [k data/skills-ordered]
