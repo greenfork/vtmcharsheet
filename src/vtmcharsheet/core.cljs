@@ -52,10 +52,42 @@
   ([] (reset-skills (zipmap data/skills-ordered data/skills-defaults)))
   ([values] (swap! charsheet assoc :skills values)))
 (defn random-skills []
+  ;; Randomly distribute points
   (reset-skills
-   (zipmap (shuffle data/skills-ordered)
-           (map (fn [x] {:value x})
-            (shuffle ((:skill-distribution @charsheet) data/skills-random))))))
+   (merge
+    (zipmap data/skills-ordered data/skills-defaults)
+    (zipmap (shuffle data/skills-ordered)
+            (map (fn [x] {:value x})
+             (shuffle ((:skill-distribution @charsheet) data/skills-random))))))
+  ;; Assign free specialties
+  (swap!
+   charsheet
+   (fn [x]
+     (assoc x :skills
+            (into
+             {}
+             (map (fn [[k v]]
+                    [k
+                     (if (and (data/free-specialties k) (pos? (:value v)))
+                       (update-in v [:specialty]
+                                  #(first
+                                    (shuffle
+                                     (:specialties (k data/skills)))))
+                       v)])
+                  (:skills x))))))
+  ;; Assign one specialty
+  (let [random-skill-for-specialty
+        (first
+         (shuffle
+          (map
+           first
+           (filter
+            (fn [[_ v]] (and (pos? (:value v)) (str/blank? (:specialty v))))
+            (:skills @charsheet)))))]
+    (swap! charsheet assoc-in [:skills random-skill-for-specialty :specialty]
+           (first
+            (shuffle
+             (:specialties (random-skill-for-specialty data/skills)))))))
 
 ;; -------------------------
 ;; Components
