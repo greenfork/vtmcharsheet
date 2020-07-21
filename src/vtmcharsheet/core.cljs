@@ -30,7 +30,7 @@
   (reduce (fn [acc x] (if (pred x) (inc acc) acc)) 0 coll))
 
 (defn pluralize
-  "Poor man's pluralization function."
+  "Poor man's single->plural word function."
   ([x word]
    (if (#{\a \o \u \i} (last word))
      (pluralize x word (str word "es"))
