@@ -1,11 +1,5 @@
 (ns vtmcharsheet.data)
 
-(def attribute-validations {5 0, 4 1, 3 3, 2 4, 1 1})
-(def skill-validations
-  {:jack-of-all-trades {5 0, 4 0, 3 1, 2 8, 1 10}
-   :balanced {5 0, 4 0, 3 3, 2 5, 1 7}
-   :specialist {5 0, 4 1, 3 3, 2 3, 1 3}})
-
 (def numbers {0 "zero"
               1 "one"
               2 "two"
@@ -17,6 +11,14 @@
               8 "eight"
               9 "nine"
               10 "ten"})
+
+(def attribute-validations {5 0, 4 1, 3 3, 2 4, 1 1})
+(def skill-validations
+  {:jack-of-all-trades {5 0, 4 0, 3 1, 2 8, 1 10}
+   :balanced {5 0, 4 0, 3 3, 2 5, 1 7}
+   :specialist {5 0, 4 1, 3 3, 2 3, 1 3}})
+
+(def free-specialties #{:academics :craft :performance :science})
 
 (def attributes-ordered
    [:strength :dexterity :stamina :charisma :manipulation :composure

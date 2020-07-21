@@ -32,7 +32,7 @@
 (defn pluralize
   "Poor man's single->plural word function."
   ([x word]
-   (if (#{\a \o \u \i} (last word))
+   (if (#{\a \o \u} (last word))
      (pluralize x word (str word "es"))
      (pluralize x word (str word "s"))))
   ([x word plural-word]
@@ -119,6 +119,14 @@
      (humanize (name k))]]
    [:div.pure-u-19-24 [circle-input cursor 1 5 (k data/attributes)]]])
 
+(defn enough-toomuch-meter [current out-of]
+  [:<>
+   [:span
+    {:class [(if (== current out-of) "correct-color" "wrong-color")]}
+    "(" current "/" out-of ")"]
+   (when (> current out-of) [:span.text-secondary " too much"])
+   (when (< current out-of) [:span.text-secondary " not enough"])])
+
 (defn distribution-line
   "Produces line like the following:
   Take three `unit-name` at 3: (2/3)"
@@ -129,17 +137,46 @@
       [:<>
        [:span "Take " (data/numbers valid) " "
         (pluralize valid unit-name) " at " value ": "
-        [:span
-         {:class [(if (== valid number-of-elems) "correct-color" "wrong-color")]}
-         "(" number-of-elems "/" valid ")"]
-        (when (> number-of-elems valid) [:span.text-secondary " too much"])
-        (when (< number-of-elems valid) [:span.text-secondary " not enough"])]
+        [enough-toomuch-meter number-of-elems valid]]
        [:br]])))
 
-(defn distribution-text
+(defn distribution-validation-text
   [attrs validations unit-name]
   (for [x (reverse (range 1 6))]
     ^{:key x} [distribution-line x attrs validations unit-name]))
+
+(defn specialty-validation-text [skills free-specialties]
+  (let [taken-specialties-count
+        (count-elems (fn [[k v]] (and (not (data/free-specialties k))
+                                      (not (str/blank? (:specialty v)))))
+                     skills)
+        available-free-specialties
+        (filter (fn [[k v]] (and (data/free-specialties k)
+                                 (pos? (:value v))))
+                skills)
+        specialty-taken-without-points
+        (some (fn [[k v]] (and (not (str/blank? (:specialty v)))
+                               (zero? (int (:value v)))))
+              skills)]
+    [:<>
+     [:span
+      "Take any specialty: "
+      [enough-toomuch-meter taken-specialties-count 1]]
+     [:br]
+     (when specialty-taken-without-points
+       [:<>
+        [:span.wrong-color
+         "Only take specialties in skills with spent points in them"]
+        [:br]])
+     (for [skill available-free-specialties]
+       ^{:key (first skill)}
+       [:<>
+        [:span
+         "Take " (humanize (first skill)) " specialty: "
+         [enough-toomuch-meter
+          (if (str/blank? (:specialty (second skill))) 0 1)
+          1]]
+        [:br]])]))
 
 (defn skill-element
   "A single line for the skill."
@@ -212,7 +249,7 @@
 (defn attributes-page []
   [:div
    [:h2 "Attributes"]
-   [:p (distribution-text
+   [:p (distribution-validation-text
         (vals (:attributes @charsheet))
         data/attribute-validations
         "attribute")]
@@ -239,10 +276,12 @@
             {:class [(when (= @skill-distribution k) :pure-button-active)]
              :on-click #(reset! skill-distribution k)}
             (:name v)]))]]
-      [:p (distribution-text
+      [:p (distribution-validation-text
            (map (fn [[_ v]] (int (:value v))) (:skills @charsheet))
            ((:skill-distribution @charsheet) data/skill-validations)
-           "skill")]]
+           "skill")]
+      [:p [specialty-validation-text
+           (:skills @charsheet) data/free-specialties]]]
      [:p.pure-button-group
       [:button.pure-button {:on-click #(reset-skills)} "Reset"]
       [:button.pure-button {:on-click #(random-skills)} "Random"]]
