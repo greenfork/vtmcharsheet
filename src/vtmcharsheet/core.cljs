@@ -31,12 +31,12 @@
 
 (defn pluralize
   "Poor man's single->plural word function."
-  ([x word]
+  ([n word]
    (if (#{\a \o \u} (last word))
-     (pluralize x word (str word "es"))
-     (pluralize x word (str word "s"))))
-  ([x word plural-word]
-   (if (== 1 (mod x 10)) word plural-word)))
+     (pluralize n word (str word "es"))
+     (pluralize n word (str word "s"))))
+  ([n word plural-word]
+   (if (== 1 (mod n 10)) word plural-word)))
 
 ;; -------------------------
 ;; Business-logic
