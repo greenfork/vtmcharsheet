@@ -507,3 +507,806 @@
     5 "On the internet, nobody knows you've a vampire - or that you're there at all"
     :specialties ["Artillery" "Coding" "Computer building" "Data mining" "Hacking"
                   "Networks" "Phones" "Surveillance systems"]}})
+
+(def disciplines
+  {:animalism
+   {:description "The unity of the Beast and the Man."
+    :type :mental
+    :masquerade-threat "Low to medium"
+    :blood-resonance "Animal blood, preferably feral"
+    1
+    {:bond-famulus
+     {:description "A friendly ghoul-like animal."
+      :name "Bond Famulus"
+      :dice-pools "Charisma + Animal ken"
+      :cost "Specific"
+      :duration "Unlimited"}
+     :sense-the-beast
+     {:description "Sense the Beast presence."
+      :name "Sense the Beast"
+      :cost "Free"
+      :dice-pools "Resolve + Animalism vs Composure + Subterfuge"
+      :duration "Passive"}}
+    2
+    {:feral-whispers
+     {:description "Two-way communication with animals."
+      :name "Feral whispers"
+      :dice-pools "Manipulation + Animalism or Charisma + Animalism"
+      :cost "Rouse Check, Free on Famulus"
+      :duration "One scene"}}
+    3
+    {:animal-succulence
+     {:description "Feeding on animals and famulus is more effective."
+      :name "Animal succulence"
+      :cost "Free"
+      :duration "Passive"
+      :dice-pools "None"}
+     :quell-the-beast
+     {:description "Calming gaze."
+      :name "Quell the Beast"
+      :cost "Rouse Check"
+      :dice-pools "Charisma + Animalism vs Stamina + Resolve"
+      :duration "One scene"}
+     :unliving-hive
+     {:description "Include insects as a target for powers."
+      :name "Unliving hive"
+      :cost "Free"
+      :duration "Passive"
+      :amalgam {:obfuscate 2}}}
+    4
+    {:subsume-the-spirit
+     {:description "Mind control of an animal."
+      :name "Subsume the spirit"
+      :cost "Rouse Check, free on Famulus"
+      :dice-pools "Manipulation + Animalism"
+      :duration "One scene"}}
+    5
+    {:animal-dominion
+     {:description "Include flocks and packs as a target for powers."
+      :name "Animal domination"
+      :cost "2 Rouse Checks"
+      :dice-pools "Charisma + Animalism"
+      :duration "One scene"}
+     :drawing-out-the-beast
+     {:description "Transfer own terror or frenzy to someone else."
+      :name "Drawing out the Beast"
+      :cost "Rouse Check"
+      :dice-pools "Wits + Animalism vs Composure + Resolve"
+      :duration "Frenzy duration"}}}
+   :auspex
+   {:description "See truths from lies, see what is beyond."
+    :type "Mental"
+    :masquerade-threat "Low"
+    :blood-resonance "Phlegmatic"
+    1
+    {:heightened-senses
+     {:description "Greatly improve one's senses."
+      :name "Heightened senses"
+      :cost "Free"
+      :dice-pools "Wits + Resolve"
+      :duration "Until deactivated"}
+     :sense-the-unseen
+     {:description "Sense the presences not visible to the naked eye."
+      :name "Sense the unseen"
+      :cost "Free"
+      :dice-pools "Wits + Auspex or Resolve + Auspex"
+      :duration "Passive"}}
+    2
+    {:premonition
+     {:description "See the visions, probably useful."
+      :name "Premonition"
+      :cost "Free (passive) or Rouse Check (active)"
+      :dice-pools "Resolve + Auspex"
+      :duration "Passive"}}
+    3
+    {:scry-the-soul
+     {:description "See the psyche of a subject."
+      :name "Scry the soul"
+      :cost "Rouse Check"
+      :dice-pools "Intelligence + Auspex vs Composure + Subterfuge"
+      :duration "One turn"}
+     :share-the-senses
+     {:description "Tap into the senses of a target."
+      :name "Share the senses"
+      :cost "Rouse Check"
+      :dice-pools "Resolve + Auspex"
+      :duration "One scene"}}
+    4
+    {:spirits-touch
+     {:description "Feel the emotional state of those who were connected to the target place thing."
+      :name "Spirit's touch"
+      :cost "Rouse Check"
+      :dice-pools "Intelligence + Auspex"
+      :duration "One turn"}}
+    5
+    {:clairvoyance
+     {:description "Feel the surroundings in a large radius."
+      :name "Clairvoyance"
+      :cost "Rouse Check"
+      :dice-pools "Intelligence + Auspex"
+      :duration "Few minutes up to whole night"}
+     :possession
+     {:description "Full mind control of a mortal."
+      :name "Possession"
+      :amalgam {:dominate 3}
+      :cost "2 Rouse Checks"
+      :dice-pools "Resolve + Auspex vs Resolve + Intelligence"
+      :duration "Until deactivated"}
+     :telepathy
+     {:description "Read other's mind and project own thoughts."
+      :name "Telepathy"
+      :cost "Rouse Check"
+      :dice-pools "Resolve + Auspex vs Wits + Subterfuge"
+      :duration "One minute per Rouse Check"}}}
+   :celerity
+   {:description "Move and act fast."
+    :type "Physical"
+    :masquerade-threat "Medium to high"
+    :blood-resonance "Choleric"
+    1
+    {:cats-grace
+     {:description "Gain a perfect body balance."
+      :name "Cat's grace"
+      :cost "Free"
+      :duration "Passive"}
+     :rapid-reflexes
+     {:description "Do one action instantly."
+      :name "Rapid reflexes"
+      :cost "Free"
+      :duration "Passive"}}
+    2
+    {:fleetiness
+     {:description "Move and react very fast."
+      :cost "Rouse Check"
+      :duration "One scene"
+      :name "Fleetiness"}}
+    3
+    {:blink
+     {:description "Move distances in a blink of an eye."
+      :name "Blink"
+      :cost "Rouse Check"
+      :dice-pools "Dexterity + Athletics"
+      :duration "One turn"}
+     :traversal
+     {:description "Run on any surface defying gravity."
+      :name "Traversal"
+      :cost "Rouse Check"
+      :dice-pools "Dexterity + Athletics"
+      :duration "One turn"}}
+    4
+    {:draught-of-elegance
+     {:description "Blood gives others the power of Celerity."
+      :name "Draught of elegance"
+      :cost "Rouse Check"
+      :duration "Until fed again"}
+     :unerring-aim
+     {:description "The world around slows down."
+      :name "Unerring aim"
+      :amalgam {:auspex 2}
+      :cost "Rouse Checks"
+      :duration "A single attack"}}
+    5
+    {:lightning-strike
+     {:description "Strike blazingly fast without foe's ability to defend."
+      :name "Lighning strike"
+      :cost "Rouse Check"
+      :duration "A single attack"}
+     :split-second
+     {:description "Do any action in a fraction of a second."
+      :name "Split second"
+      :cost "Rouse Check"
+      :duration "One action"}}}
+   :dominate
+   {:description "Command and make others do things for you."
+    :type "Mental"
+    :masquerade-threat "Low"
+    :blood-resonance "Phlegmatic"
+    1
+    {:cloud-memory
+     {:description "Make a target forget the last few moments."
+      :name "Cloud memory"
+      :cost "Free"
+      :dice-pools "None (mortals), Charisma + Dominate vs Wits + Resolve (vampires)"
+      :duration "Indefinitely"}
+     :compel
+     {:description "Make the target do one simple command."
+      :name "Compel"
+      :cost "Free"
+      :dice-pools "None (mortals), Charisma + Dominate vs Intelligence + Resolve"
+      :duration "One scene"}}
+    2
+    {:mesmerize
+     {:description "Make the target do one complex command."
+      :name "Mesmerize"
+      :cost "Rouse Check"
+      :dice-pools "None (mortals), Manipulation + Dominate vs Intelligence + Resolve (vampires)"
+      :duration "Until the command is completed"}
+     :dementation
+     {:description "Deliver harm to target's Willpower during conversation."
+      :name "Dementation"
+      :cost "Rouse Check per scene"
+      :duration "One scene"}}
+    3
+    {:the-forgetful-mind
+     {:description "Rewrite target's memory."
+      :name "The forgetful mind"
+      :cost "Rouse Check"
+      :dice-pools "Manipulation + Dominate vs Intelligence + Resolve"
+      :duration "Indefinitely"}
+     :submerged-directive
+     {:description "Add conditional command to Mesmerize."
+      :name "Submerged directive"
+      :cost "Free"
+      :duration "Passive"}}
+    4
+    {:rationalize
+     {:description "Victims affected by Dominate truly believe it was their own will."
+      :name "Rationalize"
+      :cost "Free"
+      :duration "Indefinitely"}}
+    5
+    {:mass-manipulation
+     {:description "Issue command or manipulate memories of an entire group."
+      :name "Mass manipulation"
+      :cost "Rouse Check"
+      :duration "Passive"}
+     :terminal-decree
+     {:description "Commands can directly harm the target."
+      :name "Terminal decree"
+      :cost "Free"
+      :duration "Passive"}}}
+   :fortitude
+   {:description "Become extremly tough physically and mentally."
+    :type "Physical"
+    :masquerade-threat "Medium"
+    :blood-resonance "Melancholic"
+    1
+    {:resilience
+     {:description "Become physically tougher."
+      :name "Resilience"
+      :cost "Free"
+      :duration "Passive"}
+     :unswayable-mind
+     {:description "Become mentally more resistable."
+      :name "Unswayable mind"
+      :cost "Free"
+      :duration "Passive"}}
+    2
+    {:toughness
+     {:description "Partially ignore superficial damage."
+      :name "Toughness"
+      :cost "Rouse Check"
+      :duration "One scene"}
+     :enduring-beasts
+     {:description "Share toughness with an animal."
+      :name "Enduring beasts"
+      :cost "Rouse Check, Free on Famulus"
+      :duration "One scene"
+      :amalgam {:animalism 1}}}
+    3
+    {:defy-bane
+     {:description "Resist fire and sunlight."
+      :name "Defy Bane"
+      :cost "Rouse Check"
+      :dice-pools "Wits + Survival"
+      :duration "One scene"}
+     :fortify-the-inner-facade
+     {:description "For others own mind and auro become completely blank."
+      :name "Fortify the inner facade"
+      :cost "Free"
+      :duration "One scene"}}
+    4
+    {:draught-of-endurance
+     {:description "Blood gives others the power of Fortitude."
+      :name "Draught of Endurance"
+      :cost "Rouse Check"
+      :duration "Until fed"}}
+    5
+    {:flesh-of-marble
+     {:description "The skin becomes like a stone."
+      :name "Flesh of marble"
+      :cost "2 Rouse Checks"
+      :duration "One scene"}
+     :prowess-from-pain
+     {:description "Any damage makes one only stronger."
+      :name "Prowess from pain"
+      :cost "Rouse Check"
+      :duration "One scene"}}}
+   :obfuscate
+   {:description "Hide and remain unseen."
+    :type "Mental"
+    :masquerade-threat "Low"
+    :blood-resonance "Melancholic"
+    1
+    {:cloak-of-shadows
+     {:description "Standing still renders the user unseen."
+      :name "Cloak of shadows"
+      :cost "Free"
+      :duration "One scene"}
+     :silence-of-death
+     {:description "Makes one completely silent."
+      :name "Silence of death"
+      :cost "Free"
+      :duration "One scene"}}
+    2
+    {:unseen-passage
+     {:description "Move while staying hidden."
+      :name "Unseen passage"
+      :cost "Rouse Check"
+      :duration "One scene"}}
+    3
+    {:ghost-in-the-machine
+     {:description "Hiding abilities also affect electronic media."
+      :name "Ghost in the machine"
+      :cost "Free"
+      :duration "Passive"}
+     :mask-of-a-thousand-faces
+     {:description "Appear as the one expected to be at the current place."
+      :name "Mask of a thousand faces"
+      :cost "Rouse Check"
+      :duration "One scene"}}
+    4
+    {:conceal
+     {:description "Hide and inanimate object."
+      :name "Conceal"
+      :amalgam {:auspex 3}
+      :cost "Rouse Check"
+      :dice-pools "Intelligence + Obfuscate"
+      :duration "One night"}
+     :vanish
+     {:description "Make oneself hidden even while being observed."
+      :name "Vanish"
+      :prerequisite :cloak-of-shadows
+      :cost "As per power augmented"
+      :dice-pools "Wits + Obfuscate vs Wits + Awareness"
+      :duration "As per power augmented"}}
+    5
+    {:cloak-the-gathering
+     {:description "Use Obfuscate powers on companions."
+      :name "Cloak the gathering"
+      :cost "Rouse Check + augmented power"
+      :duration "As per power augmented"}
+     :impostors-guise
+     {:description "Appear as a specific person."
+      :name "Impostor's guise"
+      :prerequisite :mask-of-a-thousand-faces
+      :cost "Rouse Check"
+      :dice-pools "Wits + Obfuscate or Manipulation + Performance"
+      :duration "One scene"}}}
+   :potence
+   {:description "Become physically stronger and more capable."
+    :type "Physical"
+    :masquerade-threat "Medium to High"
+    :blood-resonance "Choleric"
+    1
+    {:lethal-body
+     {:description "Increase the power of unarmed combat."
+      :name "Lethal body"
+      :cost "Free"
+      :duration "Passive"}
+     :soaring-leap
+     {:description "Make a long leap"
+      :name "Soaring leap"
+      :cost "Free"
+      :duration "Passive"}}
+    2
+    {:prowess
+     {:description "Greatly increase one's strength."
+      :name "Prowess"
+      :cost "Rouse Check"
+      :duration "One scene"}}
+    3
+    {:brutal-feed
+     {:description "Instantly drain blood from a victim."
+      :name "Brutal feed"
+      :cost "Free"
+      :duration "One feeding"}
+     :spark-of-rage
+     {:description "Affect with rage or frenzy someone who looks at the user."
+      :name "Spark of rage"
+      :cost "Rouse Check"
+      :duration "One scene"
+      :amalgam {:presence 3}}
+     :uncanny-grip
+     {:description "Climb or grip any surface."
+      :name "Uncanny grip"
+      :cost "Rouse Check"
+      :duration "One scene"}}
+    4
+    {:draught-of-might
+     {:description "Blood gives others the power of Celerity."
+      :name "Draught of might"
+      :cost "Rouse Check"
+      :duration "Until fed"}}
+    5
+    {:earthshock
+     {:description "Slam and produce a shockwave on the ground."
+      :name "Earthshock"
+      :cost "2 Rouse Checks"
+      :duration "One use"}
+     :fist-of-caine
+     {:description "Tear flesh of one's foes"
+      :name "Fist of Caine"
+      :cost "Rouse Check"
+      :duration "One scene"}}}
+   :presence
+   {:description "Manipulate victim's emotional state."
+    :type "Mental"
+    :masquerade-threat "Low to Medium"
+    :blood-resonance "Sangiune"
+    1
+    {:awe
+     {:description "Attract attention and make one more likeable."
+      :name "Awe"
+      :cost "Free"
+      :duration "One scene"}
+     :daunt
+     {:description "Repel others and appear threatening."
+      :name "Daunt"
+      :cost "Free"
+      :duration "One scene"}}
+    2
+    {:lingering-kiss
+     {:description "\Kiss\" a victim and make them feel ecstatic."
+      :name "Lingering kiss"
+      :cost "Free"
+      :duration "Until resisted"}}
+    3
+    {:dread-gaze
+     {:description "Gaze at a victim instilling a deep fear in them."
+      :name "Dread gaze"
+      :cost "Rouse Check"
+      :dice-pools "Charisma + Presence vs Composure + Resolve"
+      :duration "One turn"}
+     :entrancement
+     {:description "Instill fascination and infatuation in a victim."
+      :name "Entrancement"
+      :cost "Rouse Check"
+      :dice-pools "Charisma + Presence vs Composure + Wits"
+      :duration "One hour plus one per point of margin"}}
+    4
+    {:irresistible-voice
+     {:description "Dominating others requires only the voice to be heard."
+      :name "Irresistible voice"
+      :cost "As per augmented power"
+      :duration "Passive"
+      :amalgam { :dominate 1}}
+     :summon
+     {:description "Make a calling to someone."
+      :name "Summon"
+      :cost "Rouse Check"
+      :dice-pools "Manipulation + Presence vs Composure + Intelligence"
+      :duration "One night"}}
+    5
+    {:majesty
+     {:description "Appear divine before the eyes of looking."
+      :name "Majesty"
+      :cost "2 Rouse Checks"
+      :dice-pools "Charisma + Presence vs Composure + Resolve"
+      :duration "One scene"}
+     :star-magnetism
+     {:description "Presence powers affect victims over electronic media."
+      :name "Star magnetism"
+      :cost "Rouse Check + augmented power"
+      :duration "As per power augmented"}}}
+   :protean
+   {:description "Mutate and shift form, augment physical characteristics."
+    :type "Physical"
+    :masquerade-threat "High"
+    :blood-resonance "Animal blood"
+    1
+    {:eyes-of-the-beast
+     {:description "See in darkness."
+      :name "Eyes of the Beast"
+      :cost "Free"
+      :duration "Until ended"}
+     :weight-of-the-feather
+     {:description "Reduce one's weight."
+      :name "Weight of the feather"
+      :cost "Free"
+      :duration "Until ended"}}
+    2
+    {:feral-weapons
+     {:description "Extend natural weapons, usually nails."
+      :name "Feral weapons"
+      :cost "Rouse Check"
+      :duration "One scene"}}
+    3
+    {:earth-meld
+     {:description "Meld into the ground."
+      :name "Earth meld"
+      :cost "Rouse Check"
+      :duration "Until ended"}
+     :shapechange
+     {:description "Transform into an animal of the same size, most closely resembling the clan or feeding type."
+      :name "Shapechange"
+      :cost "Rouse Check"
+      :duration "One scene"}}
+    4
+    {:metamorphosis
+     {:description "Gain an additional form to transform to, independent of size or any other properties."
+      :name "Metamorphosis"
+      :cost "Rouse Check"
+      :duration "One scene"
+      :prerequisite :shapechange}}
+    5
+    {:mist-form
+     {:description "Turn into a mist."
+      :name "Mist form"
+      :cost "One to Three Rouse Checks"
+      :duration "One scene"}
+     :the-unfettered-heart
+     {:description "Manipulate own innards; wake up from paralysis."
+      :name "The unfettered heart"
+      :cost "Free"
+      :duration "Passive"}}}
+   :blood-sorcery
+   {:description "Blood magic. Also unlocks rituals."
+    :type "Sorcery"
+    :masquerade-threat "Low to High"
+    :blood-resonance "Sangiune"
+    1
+    {:corrosive-vitae
+     {:description "Blood becomes like acid and can corrode items."
+      :name "Corrosive Vitae"
+      :cost "Rouse Check per turn"
+      :duration "Until ended"}
+     :a-taste-for-blood
+     {:description "Identify a target by tasting its blood."
+      :name "A taste for Blood"
+      :cost "Free"
+      :dice-pools "Resolve + Blood Sorcery"}}
+    2
+    {:extinguish-vitae
+     {:description "Increase the target vampire's hunger."
+      :name "Extinguish Vitae"
+      :cost "Rouse Check"
+      :dice-pools "Intelligence + Blood Sorcery vs Stamina + Composure"}}
+    3
+    {:blood-of-potency
+     {:description "Increse the user's blood potency."
+      :name "Blood of potency"
+      :cost "Rouse Check"
+      :dice-pools "Resolve + Blood Sorcery"
+      :duration "One scene"}
+     :scorpions-touch
+     {:description "Turn the user's blood into a paralyzing poison."
+      :name "Scorpion's touch"
+      :cost "Rouse check per turn"
+      :duration "One scene"}}
+    4
+    {:theft-of-vitae
+     {:description "Consume mortal's blood from a distance."
+      :name "Theft of Vitae"
+      :cost "Rouse Check"
+      :dice-pools "Wits + Blood Sorcery vs Wits + Occult"
+      :duration "One feeding"}}
+    5
+    {:baals-caress
+     {:description "The user's blood becomes a deadly poison for mortals and vampires."
+      :name "Baal's caress"
+      :cost "Rouse Check per turn"
+      :dice-pools "Strength + Blood Sorcery vs Stamina + Occult or Fortitude"
+      :duration "One scene"}
+     {:cauldron-of-blood
+      {:description "Boil the blood in the victim's veins."
+       :name "Cauldron of Blood"
+       :cost "Rouse Check and Humanity stain"
+       :dice-pools "Resolve + Blood Sorcery vs Composure + Occult or Fortitude"
+       :duration "One turn"}}}}
+   :rituals
+   {:description "Auxiliary powers granted to the user of Blood Sorcery. They require time and preparation to execute."
+    :type "Sorcery"
+    :masquerade-threat "Low to High"
+    :blood-resonance "Sangiune"
+    1
+    {:blood-walk
+     {:description "Learn more things about the target augmenting A taste for Blood ability."
+      :name "Blood walk"
+      :prerequisite :a-taste-for-blood
+      :dice-pools "Intelligence + Blood Sorcery"
+      :cost "Rouse Check"
+      :ingridients "A silver cup filled with Blood from the subject"}
+     :clinging-of-the-insect
+     {:description "Cling on the walls like a spider."
+      :name "Clinging of the insect"
+      :cost "Rouse Check"
+      :dice-pools "Intelligence + Blood Sorcery"
+      :ingridients "A living spider"}
+     :craft-bloodstone
+     {:description "Create a tracking artefact."
+      :name "Craft Bloodstone"
+      :cost "Rouse Check"
+      :dice-pools "Intelligence + Blood Sorcery"
+      :ingridients "A pebble of iron ore or a small magnet and a liter of blood from any source in a silver bowl"}
+     :wake-with-evenings-freshness
+     {:description "Easily awake during the day at the face of danger."
+      :name "Wake with evening's freshness"
+      :cost "Rouse Check"
+      :dice-pools "Intelligence + Blood Sorcery"
+      :ingridients "The burnt bones and feathers of a rooster"}
+     :ward-against-ghouls
+     {:description "Create a ward protecting from ghouls."
+      :name "Ward against ghouls"
+      :cost "Rouse Check"
+      :dice-pools "Intelligence + Blood Sorcery"
+      :ingridients "User's blood only"}}
+    2
+    {:communicate-with-kindred-sire
+     {:description "Long-distance communication with the user's sire."
+      :name "Communicate with Kindred Sire"
+      :cost "Rouse Check"
+      :dice-pools "Intelligence + Blood Sorcery"
+      :ingridients "An object previously possessed by the sire and a silver bowl filled with clear water"}
+     :eyes-of-babel
+     {:description "Speak and read the victim's language."
+      :name "Eyes of Babel"
+      :cost "Rouse Check"
+      :dice-pools "Intelligence + Blood Sorcery"
+      :ingridients "A fresh eye and tongue of a person"}
+     :illuminate-the-trail-of-prey
+     {:description "Visualize a trail of a target."
+      :name "Illuminate the trail of prey"
+      :cost "Rouse Check"
+      :dice-pools "Intelligence + Blood Sorcery"
+      :ingridients "A white sating ribbon"}
+     :truth-of-blood
+     {:description "Create a potion of truth."
+      :name "Truth of Blood"
+      :cost "Rouse Check"
+      :dice-pools "Intelligence + Blood Sorcery"
+      :ingridients "Blood from the subject"}
+     :ward-against-spirits
+     {:description "Create a ward protecting from spirits."
+      :name "Ward against spirits"
+      :cost "Rouse Check"
+      :dice-pools "Intelligence + Blood Sorcery"
+      :ingridients "A handful of salt or brick dust mixed with Blood"}
+     :warding-circle-against-ghouls
+     {:description "Create a warding circle protecting from ghouls."
+      :name "Warding circle against ghouls"
+      :cost "3 Rouse Checks"
+      :dice-pools "Intelligence + Blood Sorcery"
+      :ingridients "Human bone"}}
+    3
+    {:dagons-call
+     {:description "Rupture the blood vessels of a victim from distance having touched them before."
+      :name "Dagon's call"
+      :cost "Rouse Check"
+      :dice-pools "Intelligence + Blood Sorcery"
+      :ingridients "A gold inlaid ceremonial dagger"}
+     :deflection-of-wooden-doom
+     {:description "Protect the caster from a wooden stake"
+      :name "Deflection of wooden doom"
+      :cost "Rouse Check"
+      :dice-pools "Intelligence + Blood Sorcery"
+      :ingridients "Wood splinters or shavings"}
+     :essence-of-air
+     {:description "Create a potion of flight."
+      :name "Essence of air"
+      :cost "Rouse Check"
+      :dice-pools "Intelligence + Blood Sorcery"
+      :ingridients "Leaves and berries of belladonna"}
+     :firewalker
+     {:description "Become resistant to fire, can be shared with companions."
+      :name "Firewalker"
+      :cost "Rouse Check"
+      :dice-pools "Intelligence + Blood Sorcery"
+      :ingridients "Caster's fingertip"}
+     :ward-against-lupines
+     {:description "Create a ward protecting from werewolves."
+      :name "Ward against lupines"
+      :cost "Rouse Check"
+      :dice-pools "Intelligence + Blood Sorcery"
+      :ingridients "A handful of silver dust mixed with the Blood"}
+     :warding-circle-against-spirits
+     {:description "Create a warding circle protecting from spirits."
+      :name "Warding circle against spirits"
+      :cost "3 Rouse Checks"
+      :dice-pools "Intelligence + Blood Sorcery"
+      :ingridients "An iron knife dipped in salt and Blood"}}
+    4
+    {:defense-of-the-sacred-haven
+     {:description "Protect the user's haven from the sun."
+      :name "Defense of the sacred haven"
+      :cost "Rouse Check"
+      :dice-pools "Intelligence + Blood Sorcery"
+      :ingridients "The caster's Blood"}
+     :eyes-of-the-nighthawk
+     {:description "Train a carnivorous fowl to see through its eyes and direct it."
+      :name "Eyes of the nighthawk"
+      :cost "Rouse Check"
+      :dice-pools "Intelligence + Blood Sorcery"
+      :ingridients "The bird"}
+     :incorporeal-passage
+     {:description "Become a ghost-like creature unable to interact with physical objects."
+      :name "Incorporeal passage"
+      :cost "Rouse Check"
+      :dice-pools "Intelligence + Blood Sorcery"
+      :ingridients "A mirror"}
+     :ward-against-cainites
+     {:description "Create a ward protecting from vampires."
+      :name "Ward against Cainites"
+      :cost "Rouse Check"
+      :dice-pools "Intelligence + Blood Sorcery"
+      :ingridients "Ash warm from a still-burning fire"}
+     :warding-circle-against-lupines
+     {:description "Create a warding circle protecting from werewolves."
+      :name "Warding circle against lupines"
+      :cost "3 Rouse Checks"
+      :dice-pools "Intelligence + Blood Sorcery"
+      :ingridients "Silver knife dipped in wolfsbane and Blood"}}
+    5
+    {:escape-to-true-sanctuary
+     {:description "Create a one-way portal from one place to another."
+      :name "Escape to true sanctuary"
+      :cost "Rouse Check"
+      :dice-pools "Intelligence + Blood Sorcery"
+      :ingridients "Two charred circles of approximately a meter in diameter"}
+     :heart-of-stone
+     {:description "Turn own heart into stone."
+      :name "Heart of stone"
+      :cost "Rouse Check"
+      :dice-pools "Intelligence + Blood Sorcery"
+      :ingridients "A stone slab and a wax candle drenched with the Blood of the caster"}
+     :shaft-of-belated-dissolution
+     {:description "Create a stake seeking target's heart and which causes a Final Death upon reaching it."
+      :name "Shaft of belated dissolution"
+      :cost "Rouse Check"
+      :dice-pools "Intelligence + Blood Sorcery"
+      :ingridients "A stake carved of rowan wood, inscribed with baneful runes"}
+     :warding-circle-against-cainites
+     {:description "Create a warding circle protecting from vampires."
+      :name "Warding circle against Cainites"
+      :cost "3 Rouse Checks"
+      :dice-pools "Intelligence + Blood Sorcery"
+      :ingridients "Rowan wand dipped in the mixture of ash from a still-burning fire and Blood"}}}
+   :thin-blood-alchemy
+   {:description "Create magic potions."
+    :masquerade-threat "Low to High"
+    :type "Sorcery"
+    :blood-resonance "Specific"
+    1
+    {:far-reach
+     {:description "Telekinesis, move distant objects with the power of mind."
+      :name "Far reach"
+      :cost "Rouse Check"
+      :dice-pools "Resolve + Alchemy vs Strength + Athletics"
+      :ingridients "Alchemist's Blood, choleric human blood, melted nylon fibers or a grated refrigerator magnet or weird nootropics ordered off the internet"
+      :duration "One turn or more"}
+     :haze
+     {:description "Create a mist following the caster."
+      :name "Haze"
+      :cost "Rouse Check"
+      :ingridients "Alchemist's Blood, phlegmatic human blood, dry ice or cigar smoke or auto exhaust"
+      :duration "One scene or until ended"}
+     :profane-hieros-gamos
+     {:description "Change gender."
+      :name "Profane hieros gamos"
+      :ingridients "Alchemist's Blood, blood from 5 different vessels identifying fully as the desired gender"
+      :duration "Permanent"}}
+    2
+    {:envelop
+     {:description "Create a blinding mist attached to a victim."
+      :name "Envelop"
+      :ingridients "Alchemist's Blood, melancholic and phlegmatic human blood, potasium chlorate, smog or halon gas"
+      :cost "Rouse Check"
+      :dice-pools "Wits + Alchemy vs Stamina + Survival"
+      :duration "One scene or until ended"}}
+    3
+    {:defractionate
+     {:description "Make the Blood fresh again."
+      :name "Defractionate"
+      :ingridients "Alchemist's Blood, sanguine and melancholic human blood, O-negative human blood, moldy spinach, hot black coffe, sodium octanoate"}}
+    4
+    {:airborne-momentum
+     {:description "Swiftly fly in any direction."
+      :name "Airborne momentum"
+      :ingridients "Alchemist's Blood, choleric and sanguine human blood, champagne, bird blood, helium, scopolamine or belladonna extract"
+      :cost "Rouse Check"
+      :dice-pools "Strength + Alchemy vs Strength + Athletics (if resisted)"
+      :duration "One scene"}}
+    5
+    {:awaken-the-sleeper
+     {:description "Create an elixir which can awaken a vampire from Torpor."
+      :ingridients "Alchemist's Blood, choleric or sanguine human blood, adrenaline, ammonium carbonate, hart-shorn, caffeine or benzedrine, melatonin"}}}})
