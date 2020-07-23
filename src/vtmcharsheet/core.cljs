@@ -264,7 +264,16 @@
        [:strong (:name archetype)]
        [:div (:description archetype)]])]
    [:h3 "Disciplines"]
-   [:div (str/join ", " (:disciplines clan-info))]
+   [:div
+    (for [discipline (:disciplines clan-info)]
+      ^{:key discipline}
+      [:>
+       tooltip
+       {:content (:description (discipline data/disciplines))
+        :tag-name :span
+        :use-default-styles true}
+       (str (humanize discipline) " ")])]
+
    [:h3 "Clan bane"]
    [:div (:bane clan-info)]])
 

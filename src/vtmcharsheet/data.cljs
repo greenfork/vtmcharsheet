@@ -52,7 +52,7 @@
        :description "What are you looking at, got a problem?!"}
       {:name "Monster in disguise"
        :description "I'm still human and I can still live a healthy life!"}]
-    :disciplines ["Celerity" "Potence" "Presence"]
+    :disciplines [:celerity :potence :presence]
     :bane "Short-tempered and explosive they take penalty on rolls to resist fury frenzy."}
    :gangrel
    {:name "Gangrel"
@@ -68,7 +68,7 @@
       :description "Assertive dominance is the only way to power in this world."}
      {:name "Unrepentant beast"
       :description "Everyone is a beast, embrace and live with it or die!"}]
-    :disciplines ["Animalism" "Fortitude" "Protean"]
+    :disciplines [:animalism :fortitude :protean]
     :bane "Beast-like features emerge while in frenzy negatively affecting interactions."}
    :malkavian
    {:name "Malkavian"
@@ -84,7 +84,7 @@
       :description "You lie, you lie! I know the truth, just open your eyes!"}
      {:name "Pure blood addict"
       :description "I need to take this meal one more time, please, I'm so weak..."}]
-    :disciplines ["Auspex" "Dominate" "Obfuscate"]
+    :disciplines [:auspex :dominate :obfuscate]
     :bane "Sometimes visions haunt you making it hard to function in this world"}
    :nosferatu
    {:name "Nosferatu"
@@ -100,7 +100,7 @@
       :description "No one expects me to smash their skull, often their last mistake."}
      {:name "Rat"
       :description "People come, people go, but I survive everyone!.."}]
-    :disciplines ["Animalism" "Obfuscate" "Potence"]
+    :disciplines [:animalism :obfuscate :potence]
     :bane "Don't try to be a human, your monstrous nature is easily seen."}
    :toreador
    {:name "Toreador"
@@ -116,7 +116,7 @@
       :description "A diamond needs polishing before it becomes a brilliant!"}
      {:name "Thespian spy"
       :description "Secrets and information is my art!"}]
-    :disciplines ["Auspex" "Celerity" "Presence"]
+    :disciplines [:auspex :celerity :presence]
     :bane "Beauty is addictive, you suffer when being in ugly surroundings."}
    :tremere
    {:name "Tremere"
@@ -132,7 +132,7 @@
       :description "My way is my way and I will follow it as I want."}
      {:name "Chief of security"
       :description "The sharp mind is what makes a perfect investigator."}]
-    :disciplines ["Auspex" "Blood sorcery" "Dominate"]
+    :disciplines [:auspex :blood-sorcery :dominate]
     :bane "The blood once strong is now weak and doesn't bind mortals as well."}
    :ventrue
    {:name "Ventrue"
@@ -148,7 +148,7 @@
       :description "My men is my hands."}
      {:name "High priest"
       :description "My ancestors will be proud of me!"}]
-    :disciplines ["Dominate" "Fortitude" "Presence"]
+    :disciplines [:dominate :fortitude :presence]
     :bane "The blood you drink should be of highest quality."}
    :caitiff
    {:name "Caitiff"
@@ -180,7 +180,7 @@
       :description "I wanted to be a real vampire, not this weak image of a real power."}
      {:name "Redemption seeker"
       :description "They will never make me do what they want, revenge is coming."}]
-    :disciplines ["Thin-blood alchemy"]
+    :disciplines [:thin-blood-alchemy]
     :bane "None"}))
 
 (def skill-distributions
@@ -947,7 +947,7 @@
       :duration "One scene"}}
     2
     {:lingering-kiss
-     {:description "\Kiss\" a victim and make them feel ecstatic."
+     {:description "\"Kiss\" a victim and make them feel ecstatic."
       :name "Lingering kiss"
       :cost "Free"
       :duration "Until resisted"}}
@@ -1088,12 +1088,12 @@
       :cost "Rouse Check per turn"
       :dice-pools "Strength + Blood Sorcery vs Stamina + Occult or Fortitude"
       :duration "One scene"}
-     {:cauldron-of-blood
-      {:description "Boil the blood in the victim's veins."
-       :name "Cauldron of Blood"
-       :cost "Rouse Check and Humanity stain"
-       :dice-pools "Resolve + Blood Sorcery vs Composure + Occult or Fortitude"
-       :duration "One turn"}}}}
+     :cauldron-of-blood
+     {:description "Boil the blood in the victim's veins."
+      :name "Cauldron of Blood"
+      :cost "Rouse Check and Humanity stain"
+      :dice-pools "Resolve + Blood Sorcery vs Composure + Occult or Fortitude"
+      :duration "One turn"}}}
    :rituals
    {:description "Auxiliary powers granted to the user of Blood Sorcery. They require time and preparation to execute."
     :type "Sorcery"
