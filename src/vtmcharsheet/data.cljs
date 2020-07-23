@@ -52,7 +52,7 @@
        :description "What are you looking at, got a problem?!"}
       {:name "Monster in disguise"
        :description "I'm still human and I can still live a healthy life!"}]
-    :disciplines [:celerity :potence :presence]
+    :disciplines #{:celerity :potence :presence}
     :bane "Short-tempered and explosive they take penalty on rolls to resist fury frenzy."}
    :gangrel
    {:name "Gangrel"
@@ -68,7 +68,7 @@
       :description "Assertive dominance is the only way to power in this world."}
      {:name "Unrepentant beast"
       :description "Everyone is a beast, embrace and live with it or die!"}]
-    :disciplines [:animalism :fortitude :protean]
+    :disciplines #{:animalism :fortitude :protean}
     :bane "Beast-like features emerge while in frenzy negatively affecting interactions."}
    :malkavian
    {:name "Malkavian"
@@ -84,7 +84,7 @@
       :description "You lie, you lie! I know the truth, just open your eyes!"}
      {:name "Pure blood addict"
       :description "I need to take this meal one more time, please, I'm so weak..."}]
-    :disciplines [:auspex :dominate :obfuscate]
+    :disciplines #{:auspex :dominate :obfuscate}
     :bane "Sometimes visions haunt you making it hard to function in this world"}
    :nosferatu
    {:name "Nosferatu"
@@ -100,7 +100,7 @@
       :description "No one expects me to smash their skull, often their last mistake."}
      {:name "Rat"
       :description "People come, people go, but I survive everyone!.."}]
-    :disciplines [:animalism :obfuscate :potence]
+    :disciplines #{:animalism :obfuscate :potence}
     :bane "Don't try to be a human, your monstrous nature is easily seen."}
    :toreador
    {:name "Toreador"
@@ -116,7 +116,7 @@
       :description "A diamond needs polishing before it becomes a brilliant!"}
      {:name "Thespian spy"
       :description "Secrets and information is my art!"}]
-    :disciplines [:auspex :celerity :presence]
+    :disciplines #{:auspex :celerity :presence}
     :bane "Beauty is addictive, you suffer when being in ugly surroundings."}
    :tremere
    {:name "Tremere"
@@ -132,7 +132,7 @@
       :description "My way is my way and I will follow it as I want."}
      {:name "Chief of security"
       :description "The sharp mind is what makes a perfect investigator."}]
-    :disciplines [:auspex :blood-sorcery :dominate]
+    :disciplines #{:auspex :blood-sorcery :dominate}
     :bane "The blood once strong is now weak and doesn't bind mortals as well."}
    :ventrue
    {:name "Ventrue"
@@ -148,7 +148,7 @@
       :description "My men is my hands."}
      {:name "High priest"
       :description "My ancestors will be proud of me!"}]
-    :disciplines [:dominate :fortitude :presence]
+    :disciplines #{:dominate :fortitude :presence}
     :bane "The blood you drink should be of highest quality."}
    :caitiff
    {:name "Caitiff"
@@ -164,7 +164,8 @@
       :description "Everyone survives as one can, don't judje me."}
      {:name "Unwanted childe"
       :description "Never knew my sire, never wanted to know."}]
-    :disciplines ["Any"]
+    :disciplines #{:animalism :auspex :celerity :dominate :fortitue :obfuscate
+                   :potence :presence :protean :blood-sorcery}
     :bane "Not respected by Kindred and having increased cost for leveling skills."}
    :thin-blooded
    {:name "Thin-blooded"
@@ -180,7 +181,7 @@
       :description "I wanted to be a real vampire, not this weak image of a real power."}
      {:name "Redemption seeker"
       :description "They will never make me do what they want, revenge is coming."}]
-    :disciplines [:thin-blood-alchemy]
+    :disciplines #{:thin-blood-alchemy}
     :bane "None"}))
 
 (def skill-distributions

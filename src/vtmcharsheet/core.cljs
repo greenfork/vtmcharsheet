@@ -151,6 +151,49 @@
      (humanize (name k))]]
    [:div.pure-u-19-24 [circle-input cursor 1 5 (k data/attributes)]]])
 
+(defn describe-discipline-skill [m]
+  [:div
+   [:ul
+    (when-let [n (:name m)]
+      [:li "Name: " n])
+    (when-let [desc (:description m)]
+      [:li "Description: " desc])
+    (when-let [cost (:cost m)]
+      [:li "Cost: " cost])
+    (when-let [dp (:dice-pools m)]
+      [:li "Dice pools: " dp])
+    (when-let [ing (:ingridients m)]
+      [:li "Ingridients: " ing])
+    (when-let [d (:duration m)]
+      [:li "Duration: " d])]])
+
+(defn discipline-element
+  "A single line for the discipline."
+  [k cursor]
+  (let [description
+        (zipmap
+         (range 1 6)
+         (map
+          (fn [n]
+            (let [level-disciplines ((k data/disciplines) n)]
+              (r/as-element
+               [:span
+                [:span "Level " n " of " (humanize k)]
+                (reduce
+                 (fn [acc, x] (conj acc (describe-discipline-skill (second x))))
+                 [:span]
+                 level-disciplines)])))
+          (range 1 6)))]
+    [:<>
+     [:div.pure-u-5-24
+      [:>
+       tooltip
+       {:content (get-in data/disciplines [k :description])
+        :tag-name :span
+        :use-default-styles true}
+       (humanize (name k))]]
+     [:div.pure-u-19-24 [circle-input cursor 0 5 description]]]))
+
 (defn enough-toomuch-meter [current out-of]
   [:<>
    [:span
@@ -331,11 +374,25 @@
       (for [k data/skills-ordered]
         ^{:key k} [skill-element k (r/cursor charsheet [:skills k])])]]))
 
+(defn disciplines-page []
+  (let [available-disciplines
+        (:disciplines ((keyword (:clan @charsheet)) data/clans))]
+    [:div
+     [:h2 "Disciplines"]
+     [:p
+      [:span "Take one discipline at 1: (0/1)"][:br]
+      [:span "Take one discipline at 2: (0/1)"][:br]]
+     [:div
+      (for [k available-disciplines]
+        ^{:key k}
+        [discipline-element k (r/cursor charsheet [:disciplines k])])]]))
+
 (def pages
    [[intro-page]
     [clan-page]
     [attributes-page]
-    [skills-page]])
+    [skills-page]
+    [disciplines-page]])
 
 (defn has-next-page? [page] (< @page (dec (count pages))))
 (defn has-prev-page? [page] (> @page 0))
