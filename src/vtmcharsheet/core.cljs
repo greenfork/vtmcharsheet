@@ -210,7 +210,7 @@
         number-of-elems (count-elems #{value} attrs)]
     (when (or (not (zero? valid)) (pos? number-of-elems))
       [:<>
-       [:span "Take " (data/numbers valid) " "
+       [:span "Take " (or (data/numbers valid) valid) " "
         (pluralize valid unit-name) " at " value ": "
         [enough-toomuch-meter number-of-elems valid]]
        [:br]])))
@@ -377,22 +377,30 @@
 (defn disciplines-page []
   (let [available-disciplines
         (:disciplines ((keyword (:clan @charsheet)) data/clans))]
+    (swap! charsheet assoc :disciplines
+           (select-keys (:disciplines @charsheet) available-disciplines))
     [:div
      [:h2 "Disciplines"]
-     [:p
-      [:span "Take one discipline at 1: (0/1)"][:br]
-      [:span "Take one discipline at 2: (0/1)"][:br]]
+     [:p (distribution-validation-text
+          (map second (filter (fn [[k _]] (available-disciplines k))
+                              (:disciplines @charsheet)))
+          data/discipline-validations
+          "discipline")]
      [:div
       (for [k available-disciplines]
         ^{:key k}
         [discipline-element k (r/cursor charsheet [:disciplines k])])]]))
+
+(defn final-charsheet-page []
+  [:p "Hey hai"])
 
 (def pages
    [[intro-page]
     [clan-page]
     [attributes-page]
     [skills-page]
-    [disciplines-page]])
+    [disciplines-page]
+    [final-charsheet-page]])
 
 (defn has-next-page? [page] (< @page (dec (count pages))))
 (defn has-prev-page? [page] (> @page 0))
