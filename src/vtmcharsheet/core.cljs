@@ -382,14 +382,17 @@
     [:div
      [:h2 "Disciplines"]
      [:p (distribution-validation-text
-          (map second (filter (fn [[k _]] (available-disciplines k))
-                              (:disciplines @charsheet)))
+          (map (comp :level second)
+               (filter (fn [[k _]] (available-disciplines k))
+                       (:disciplines @charsheet)))
           data/discipline-validations
           "discipline")]
-     [:div
+     [:div.pure-g
       (for [k available-disciplines]
         ^{:key k}
-        [discipline-element k (r/cursor charsheet [:disciplines k])])]]))
+        [:<>
+         [discipline-element k (r/cursor charsheet [:disciplines k :level])]
+         #_[:div.pure-u-1-1 "a"]])]]))
 
 (defn final-charsheet-page []
   [:p "Hey hai"])
