@@ -111,6 +111,13 @@
     (for [[k v] options]
       ^{:key k} [:option {:value k} v])]])
 
+(defn select-input-with-cb
+  "A select input with a label."
+  [options cb]
+  [:select {:on-change cb}
+   (for [[k v] options]
+     ^{:key k} [:option {:value k} v])])
+
 (defn circle-with-tooltip
   "A single circle with a tooltip."
   [tooltip-text is-active]
@@ -148,7 +155,7 @@
      {:content (get-in data/attributes [k :description])
       :tag-name :span
       :use-default-styles true}
-     (humanize (name k))]]
+     (humanize k)]]
    [:div.pure-u-19-24 [circle-input cursor 1 5 (k data/attributes)]]])
 
 (defn describe-discipline-skill [m]
@@ -191,7 +198,7 @@
        {:content (get-in data/disciplines [k :description])
         :tag-name :span
         :use-default-styles true}
-       (humanize (name k))]]
+       (humanize k)]]
      [:div.pure-u-19-24 [circle-input cursor 0 5 description]]]))
 
 (defn enough-toomuch-meter [current out-of]
@@ -263,7 +270,7 @@
      {:content (get-in data/skills [k :description])
       :tag-name :span
       :use-default-styles true}
-     (humanize (name k))]]
+     (humanize k)]]
    [:div.pure-u-10-24.pure-form
     (let [specialty-k (str "specialty-" k)]
       [:>
@@ -387,12 +394,29 @@
                        (:disciplines @charsheet)))
           data/discipline-validations
           "discipline")]
-     [:div.pure-g
-      (for [k available-disciplines]
-        ^{:key k}
-        [:<>
-         [discipline-element k (r/cursor charsheet [:disciplines k :level])]
-         #_[:div.pure-u-1-1 "a"]])]]))
+     [:div.pure-g.pure-form
+      (doall
+       (for [k available-disciplines
+             :let [level-cursor (r/cursor charsheet [:disciplines k :level])
+                   powers-cursor (r/cursor charsheet [:disciplines k :powers])]]
+         ^{:key k}
+         [:<>
+          [discipline-element k level-cursor]
+          (let [available-powers
+                (select-keys (k data/disciplines) (range 1 (inc @level-cursor)))
+                power-options
+                (reduce-kv (fn [acc k v] (conj acc [k, (:name v)]))
+                           [["", "--"]]
+                           (reduce merge (vals available-powers)))]
+            (doall
+             (for [i (range @level-cursor)]
+               ^{:key i}
+               [:<>
+                [:div.pure-u-5-24 (humanize (str (name k) " power"))]
+                [:div.pure-u-19-24
+                 (select-input-with-cb
+                  power-options #()
+                  #_(swap! powers-cursor conj (.. % -target -value)))]])))]))]]))
 
 (defn final-charsheet-page []
   [:p "Hey hai"])
